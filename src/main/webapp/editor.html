@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Editor - Publicar Juego</title>
+    <link rel="stylesheet" href="css/editor_revision.css">
+</head>
+<body class="body-editor">
+
+<header class="header">
+    <h1 class="logo">icono</h1>
+    <nav class="nav" id="menu-principal">
+        <a href="tienda.html" class="link">Tienda</a>
+        <a href="biblioteca.html" class="link">Biblioteca</a>
+        <a href="editor.html" class="link active req-editor" style="display: none;">Subir Juego</a>
+        <a href="mis_publicaciones.html" class="link req-editor" style="display: none;">Mis Publicaciones</a>
+        <a href="revision.html" class="link req-admin" style="display: none;">Revision</a>
+    </nav>
+    <div class="user-slot">
+        <span id="username" class="user-name">Invitado</span>
+        <div class="user-avatar"></div>
+    </div>
+</header>
+
+<main class="main">
+    <div class="tarjeta">
+        <form id="formSubirJuego" class="form-compacto">
+
+            <div class="col-izq">
+                <div class="input-grupo">
+                    <label for="titulo">Nombre Del Juego</label>
+                    <input type="text" id="titulo" class="input-oscuro" required>
+                </div>
+
+                <div class="input-grupo">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" class="textarea-oscuro" required></textarea>
+                </div>
+            </div>
+
+            <div class="col-der">
+
+                <div class="grupo-archivo">
+                    <label>Archivo Del Juego</label>
+                    <label for="zip" class="btn-archivo">Seleccionar Archivo</label>
+                    <input type="file" id="zip" class="file-oculto" accept=".zip" required>
+                </div>
+
+                <button type="submit" class="btn-enviar">Enviar</button>
+
+            </div>
+
+        </form>
+    </div>
+</main>
+<script src="js/auth.js"></script>
+<script src="js/editor.js"></script>
+</body>
+</html>

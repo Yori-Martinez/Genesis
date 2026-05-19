@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="body-login">
+
+<header class="header-login">
+    <h1 class="logo-texto">icono</h1>
+</header>
+
+<main class="contenedor-pantalla">
+
+    <div class="tarjeta-login">
+
+        <section class="login-izquierda">
+            <form id="formLogin">
+                <div class="input-grupo">
+                    <label for="username">Nombre De Usuario</label>
+                    <input type="text" id="username" class="input-oscuro" placeholder="Patata" required>
+                </div>
+
+                <div class="input-grupo">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" class="input-oscuro" placeholder="123456789" required>
+                </div>
+
+                <button type="submit" class="btn-interactivo btn-primario">Iniciar Sesion</button>
+            </form>
+        </section>
+
+        <div class="separador-vertical"></div>
+
+        <section class="login-derecha">
+            <h2 class="texto-promocional">Metete Al Vicio Papi,<br>Es Gratis</h2>
+            <button type="button" class="btn-interactivo btn-secundario">Registrarse</button>
+        </section>
+    </div>
+</main>
+<script src="js/login.js"></script>
+</body>
+</html>

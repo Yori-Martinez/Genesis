@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin - Detalles del Juego</title>
+  <link rel="stylesheet" href="css/editor_revision.css">
+</head>
+<body class="body-editor">
+
+<header class="header">
+  <h1 class="logo">icono</h1>
+  <nav class="nav" id="menu-principal">
+    <a href="tienda.html" class="link">Tienda</a>
+    <a href="biblioteca.html" class="link">Biblioteca</a>
+    <a href="editor.html" class="link req-editor" style="display: none;">Subir Juego</a>
+    <a href="mis_publicaciones.html" class="link req-editor" style="display: none;">Mis Publicaciones</a>
+    <a href="revision.html" class="link active req-admin" style="display: none;">Revision</a>
+  </nav>
+  <div class="user-slot">
+    <span id="username" class="user-name">Invitado</span>
+    <div class="user-avatar"></div>
+  </div>
+</header>
+
+<main class="main">
+  <div class="tarjeta">
+    <form class="form-compacto">
+
+      <div class="col-izq">
+        <div class="input-grupo">
+          <label for="titulo">Titulo Del Juego</label>
+          <input type="text" id="titulo" class="input-oscuro" value="Patata" readonly>
+        </div>
+
+        <div class="input-grupo">
+          <label for="descripcion">Descripcion Del Juego</label>
+          <textarea id="descripcion" class="textarea-oscuro" readonly>No Mas De 200 Caracteres</textarea>
+        </div>
+      </div>
+
+      <div class="col-der">
+
+        <div class="grupo-archivo">
+          <label>Archivos Del Juego (.Zip)</label>
+          <a href="#" class="btn-archivo" style="text-decoration: none;">Descargar Archivos</a>
+        </div>
+
+        <div class="botones-decision">
+          <button type="button" class="btn-enviar">Aceptar</button>
+          <button type="button" class="btn-enviar">Denegar</button>
+        </div>
+
+      </div>
+
+    </form>
+  </div>
+</main>
+<script src="js/auth.js"></script>
+</body>
+</html>

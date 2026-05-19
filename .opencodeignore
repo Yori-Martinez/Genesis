@@ -1,0 +1,5 @@
+target/
+.idea/
+*.class
+*.war
+node_modules/

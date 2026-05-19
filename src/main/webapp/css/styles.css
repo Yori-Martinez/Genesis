@@ -1,0 +1,217 @@
+/* --- RESET BÁSICO --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+/* --- FONDO DE PANTALLA --- */
+.body-login {
+    background: linear-gradient(60.2deg, #37105C -5.3%, #8F1952 58.78%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- CABECERA --- */
+.header-login {
+    background: linear-gradient(60.5deg, #37105B 35.73%, #4B2272 61.77%, #8F1952 95.26%);
+    height: 7.5vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 3.5%;
+    box-shadow: 0 0.25rem 0.6rem rgba(0, 0, 0, 0.3);
+}
+
+.logo-texto {
+    color: #FFFFFF;
+    font-weight: 900;
+    font-size: 3rem;
+    letter-spacing: -0.03em;
+}
+
+/* --- CONTENEDOR CENTRAL FLEX --- */
+.contenedor-pantalla {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+/* --- LA CAJA OSCURA (LOGIN Y REGISTRO BASE) --- */
+
+/* --- Niggabox --- */
+.tarjeta-login {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    conic-gradient(from 232.33deg at 62.87% 50%, #37105C 0deg, #631557 72deg, #751655 144deg, #4D125A 216deg, #501359 288deg, #4D125A 360deg);
+
+    width: 90%;
+    max-width: 57.5rem; /* 1080px */
+    height: 30rem; /* Tu altura fija para el Login */
+    border-radius: 0;
+    box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.5);
+
+    /* --- IMPLEMENTACIÓN DE GRID --- */
+    display: grid;
+    /* Traducimos tu Flex 7 y 3.5 exactamente a proporciones de Grid (fr).
+       La columna del medio queda en 'auto' para que la línea no quite espacio. */
+    grid-template-columns: 6.5fr auto 3.5fr;
+    align-items: stretch; /* Mantiene las columnas estiradas al 100% del alto */
+}
+
+/* --- MITAD IZQUIERDA --- */
+.login-izquierda {
+    /* Quitamos flex: 7 porque el grid-template-columns ya le da su ancho */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem 3.75rem;
+}
+
+.input-grupo {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 3rem; /* Margen amplio para el Login */
+}
+
+.input-grupo label {
+    color: #FFFFFF;
+    font-size: 1.5rem;
+    margin-bottom: 0.6rem;
+    text-transform: capitalize;
+}
+
+.input-oscuro {
+    background-color: #8F1952;
+    color: #FFFFFF;
+    border: none;
+    width: 100%;
+    max-width: 35rem;
+    height: 3rem;
+    padding: 0 1.25rem;
+    font-size: 1.2rem;
+    outline: none;
+}
+
+/* --- SEPARADOR VERTICAL --- */
+.separador-vertical {
+    width: 0.06rem;
+    background-color: #FFFFFF;
+    height: 25.125rem;
+    align-self: center; /* Lo centra verticalmente dentro de su celda Grid */
+    justify-self: center; /* Lo centra horizontalmente dentro de su celda Grid */
+}
+
+/* --- MITAD DERECHA --- */
+.login-derecha {
+    /* Quitamos flex: 3.5 porque el grid ya le da su ancho */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 4.31rem 2.5rem 0 2.5rem;
+    gap: 1rem;
+}
+
+.texto-promocional {
+    color: #FFFFFF;
+    font-size: 1.55rem;
+    font-weight: 400;
+    line-height: 1.45;
+    max-width: 16.5rem;
+}
+
+/* --- BOTONES --- */
+.btn-interactivo {
+    color: #FFFFFF;
+    font-size: 1.75rem;
+    width: 11.875rem;
+    height: 3.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 0.9rem;
+    cursor: pointer;
+    background: linear-gradient(135deg, #8F1952 0%, #37105C 100%);
+    transition: all 0.3s ease;
+}
+
+.login-izquierda .btn-interactivo {
+    align-self: flex-start;
+}
+
+
+
+.btn-interactivo:hover {
+    background: radial-gradient(circle at right, #37105C 10%, #831149 100%);
+    transform: translateY(-0.125rem);
+}
+/* ============================================================
+   ESTILOS EXCLUSIVOS PARA EL REGISTRO (CON GRID)
+   ============================================================ */
+
+/* 1. Hacemos que la tarjeta en el registro sea de una sola columna y altura automática */
+.body-registro .tarjeta-login {
+    display: flex; /* <--- ¡ESTA ES LA LÍNEA MÁGICA QUE SALVA LA PÁGINA! */
+    flex-direction: column;
+    height: auto;
+    min-height: 25rem;
+    padding: 3rem;
+}
+
+/* 2. Quitamos la línea vertical (ya no la necesitamos) */
+.body-registro .separador-vertical {
+    display: none;
+}
+
+/* 3. El título del registro */
+.titulo-registro {
+    color: #FFFFFF;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-transform: capitalize;
+}
+
+/* 4. LA MAGIA: Cuadrícula de 2x2 para los inputs */
+.body-registro .grid-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+    gap: 2.2rem 3rem; /* 1.5rem de separación vertical, 3rem horizontal */
+    width: 100%;
+}
+
+/* 5. Ajustamos los márgenes de los grupos para que el grid mande */
+.body-registro .input-grupo {
+    margin-bottom: 0;
+}
+
+/* 6. El pie de la tarjeta: Flexbox para separar link y botón */
+.pie-registro {
+    display: flex;
+    justify-content: space-between; /* Link a la izquierda, botón a la derecha */
+    align-items: center;
+    margin-top: 3rem;
+    width: 100%;
+}
+
+/* 7. Estilo para el link de "Iniciar sesión" (más discreto) */
+.link-volver {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.link-volver:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+
+/* Aseguramos que el botón no flote a la izquierda en el registro */
+.body-registro .btn-interactivo {
+    align-self: flex-end;
+}

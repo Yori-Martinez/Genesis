@@ -1,0 +1,244 @@
+/* ============================================================
+   1. RESET BÁSICO Y CONFIGURACIÓN GLOBAL
+   ============================================================ */
+/*@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');*/
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+.body-editor {
+    background: linear-gradient(72.33deg, #37105C 6.2%, #8F1952 95.4%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================================
+   2. CABECERA (EXACTAMENTE 70px / MISMO QUE TIENDA)
+   ============================================================ */
+.header {
+    background: linear-gradient(60.5deg, #37105B 35.73%, #4B2272 61.77%, #8F1952 95.26%);
+    height: 7.5vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 3.5%;
+    box-shadow: 0 0.25rem 0.6rem rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+    color: #FFFFFF;
+    font-weight: 900;
+    font-size: 3.2rem; /* 64px */
+    letter-spacing: -0.03em;
+}
+
+.nav {
+    display: flex;
+    gap: 3.5rem;
+    margin-left: 6rem;
+}
+
+.link {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.5rem; /* 28px */
+    font-family: 'Kokoro', sans-serif;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: color 0.3s ease;
+}
+
+.link:hover, .link.active {
+    color: #FFFFFF;
+}
+
+.user-slot {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1.0625rem; /* 17px */
+}
+
+.user-name {
+    color: #FFFFFF;
+    font-size: 1.75rem; /* 28px */
+    text-transform: capitalize;
+}
+
+.user-avatar {
+    width: 3.375rem; /* 54px */
+    height: 3.4375rem; /* 55px */
+    background-color: #8F1952;
+    border-radius: 50%;
+}
+
+/* ============================================================
+   3. TARJETA PRINCIPAL (1300px x 650px)
+   ============================================================ */
+.main {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.tarjeta {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    conic-gradient(from 232.33deg at 62.87% 50%, #37105C 0deg, #631557 72deg, #751655 144deg, #4D125A 216deg, #501359 288deg, #4D125A 360deg);
+
+    width: 65rem; /* Exactamente 1300px */
+    height: 32.5rem; /* Exactamente 650px */
+    border-radius: 0;
+
+    /* Centramos el contenido dentro de la tarjeta */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================================
+   4. ESTRUCTURA DEL FORMULARIO
+   ============================================================ */
+.form-compacto {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    /* Padding interior para separar los campos de los bordes de la tarjeta */
+    padding: 0 3.5rem; /* 100px por los lados */
+}
+
+/* --- COLUMNA IZQUIERDA (560px) --- */
+.col-izq {
+    width: 35rem; /* Exactamente 560px */
+    display: flex;
+    flex-direction: column;
+    gap: 3rem; /* 60px de separación */
+}
+
+.input-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.input-grupo label {
+    color: #FFFFFF;
+    font-size: 1.5rem; /* 28px */
+    text-transform: capitalize;
+}
+
+/* Inputs de texto (560x48) */
+.input-oscuro {
+    background-color: #8F1952;
+    color: #FFFFFF;
+    border: none;
+    width: 80%;
+    height: 3.5rem; /* 48px */
+    padding: 0 1.25rem;
+    font-size: 1.2rem;
+    outline: none;
+}
+
+/* Textarea (560x206) */
+.textarea-oscuro {
+    background-color: #8F1952;
+    color: #FFFFFF;
+    border: none;
+    width: 80%; /* 560px */
+    height: 10rem; /* Exactamente 206px */
+    padding: 1rem 1.25rem;
+    font-size: 1.2rem;
+    outline: none;
+    resize: none;
+}
+
+/* --- COLUMNA DERECHA (290px) --- */
+.col-der {
+    width: 18.125rem; /* Exactamente 290px */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Empuja el botón "Enviar" hacia abajo */
+    align-items: flex-end; /* Pega todo a la derecha */
+}
+
+.grupo-archivo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    width: 100%;
+    margin-right: 6.5rem;
+}
+
+.grupo-archivo label:first-child {
+    color: #FFFFFF;
+    font-size: 1.5rem; /* 28px */
+    text-transform: capitalize;
+}
+
+.file-oculto {
+    display: none;
+}
+
+/* Botón de Archivo (290px x 60px) */
+.btn-archivo {
+    width: 15rem; /* 290px */
+    height: 3.2rem; /* 60px */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #FFFFFF;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 0.9rem;
+    box-shadow: 0 0.25rem 0.85rem rgba(0, 0, 0, 0.65);
+    background: linear-gradient(135deg, #8F1952 0%, #37105C 100%);
+    transition: all 0.3s ease;
+}
+
+.btn-archivo:hover {
+    background: radial-gradient(circle at right, #37105C 10%, #831149 100%);
+    transform: translateY(-0.125rem);
+}
+
+/* Botón de Enviar (254px x 84px) */
+.btn-enviar {
+    width: 9rem; /* 254px */
+    height: 3.2rem; /* 84px */
+    color: #FFFFFF;
+    font-size: 1.8rem;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.9rem;
+    box-shadow: 0 0.25rem 0.85rem rgba(0, 0, 0, 0.65);
+    background: linear-gradient(135deg, #8F1952 0%, #37105C 100%);
+    transition: all 0.3s ease;
+}
+
+.btn-enviar:hover {
+    background: radial-gradient(circle at right, #37105C 10%, #831149 100%);
+    transform: translateY(-0.125rem);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.7);
+}
+
+/* ============================================================
+   5. BOTONES DE DECISIÓN (EXCLUSIVO PARA LA VISTA ADMIN)
+   ============================================================ */
+.botones-decision {
+    display: flex;
+    gap: 1.5rem; /* Separación horizontal entre los dos botones */
+}
+
+/* Evitamos que el cursor cambie a "escribir" cuando el admin pasa el ratón sobre los campos bloqueados */
+.input-oscuro[readonly],
+.textarea-oscuro[readonly] {
+    cursor: default;
+}

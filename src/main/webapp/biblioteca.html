@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Biblioteca - Juegos</title>
+    <link rel="stylesheet" href="css/biblioteca.css">
+</head>
+<body class="body-biblioteca">
+
+<header class="header">
+    <h1 class="logo">icono</h1>
+    <nav class="nav" id="menu-principal">
+        <a href="tienda.html" class="link">Tienda</a>
+        <a href="biblioteca.html" class="link active">Biblioteca</a>
+        <a href="editor.html" class="link req-editor" style="display: none;">Subir Juego</a>
+        <a href="mis_publicaciones.html" class="link req-editor" style="display: none;">Mis Publicaciones</a>
+        <a href="revision.html" class="link req-admin" style="display: none;">Revision</a>
+    </nav>
+    <div class="user-slot">
+        <span id="username" class="user-name">Invitado</span>
+        <div class="user-avatar"></div>
+    </div>
+</header>
+
+<div class="layout-biblioteca">
+    <aside class="sidebar-biblioteca">
+        <div class="sidebar-header">
+            <div class="buscador-container">
+                <input type="text" class="input-buscador" placeholder="Buscar juego...">
+                <button class="btn-filtro" title="Filtrar y ordenar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="sidebar-lista" id="lista-lateral-juegos">
+            <div class="mensaje-vacio-sidebar" id="mensaje-vacio-sidebar">
+                Aún no tienes títulos.
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-biblioteca">
+
+        <div class="mensaje-vacio-principal" id="mensaje-vacio-grid">
+            <h2>Agrega algún juego a tu biblioteca para viciar</h2>
+        </div>
+
+        <div class="grid-biblioteca" id="grid-juegos" style="display: none;">
+        </div>
+
+    </main>
+</div>
+
+<script src="js/auth.js"></script>
+</body>
+</html>

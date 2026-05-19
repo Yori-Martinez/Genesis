@@ -1,0 +1,152 @@
+/* ============================================================
+   1. RESET BÁSICO Y CONFIGURACIÓN GLOBAL
+   ============================================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+.body-revision {
+    background: linear-gradient(72.33deg, #37105C 6.2%, #8F1952 95.4%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================================
+   2. CABECERA (70px FIJOS - IGUAL QUE EDITOR Y TIENDA)
+   ============================================================ */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: linear-gradient(60.5deg, #37105B 35.73%, #4B2272 61.77%, #8F1952 95.26%);
+    height: 7.5vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 3.5%;
+    box-shadow: 0 0.25rem 0.6rem rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+    color: #FFFFFF;
+    font-weight: 900;
+    font-size: 3.2rem;
+    letter-spacing: -0.03em;
+}
+
+.nav {
+    display: flex;
+    gap: 3.5rem;
+    margin-left: 6rem;
+}
+
+.link {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.5rem;
+    font-family: 'Kokoro', sans-serif;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: color 0.3s ease;
+}
+
+.link:hover, .link.active {
+    color: #FFFFFF;
+}
+
+.user-slot {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1.0625rem;
+}
+
+.user-name {
+    color: #FFFFFF;
+    font-size: 1.75rem;
+    text-transform: capitalize;
+}
+
+.user-avatar {
+    width: 3.375rem;
+    height: 3.4375rem;
+    background-color: #8F1952;
+    background: url('../img/image.png') center/cover no-repeat;
+    border-radius: 50%;
+}
+
+/* ============================================================
+   3. TARJETA PRINCIPAL (CLON EXACTO DE EDITOR: 65rem x 32.5rem)
+   ============================================================ */
+.main {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Para que crezca hacia abajo sin cortarse */
+    padding: 4rem 2rem;
+}
+
+.tarjeta-admin {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    conic-gradient(from 232.33deg at 62.87% 50%, #37105C 0deg, #631557 72deg, #751655 144deg, #4D125A 216deg, #501359 288deg, #4D125A 360deg);
+
+    /* MISMO ANCHO EXACTO QUE EN EDITOR.CSS */
+    width: 65rem;
+
+    /* MISMO ALTO QUE EN EDITOR.CSS, pero como altura mínima */
+    min-height: 32.5rem;
+    height: auto;
+
+    border-radius: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    /* Padding ajustado al nuevo ancho para que el contenido respire bien */
+    padding: 3rem 4.5rem;
+}
+
+/* ============================================================
+   4. TÍTULO Y LISTA DE REVISIÓN
+   ============================================================ */
+.titulo-admin {
+    color: #FFFFFF;
+    font-size: 2.2rem;
+    font-family: 'Kokoro', sans-serif;
+    font-weight: normal;
+    margin-bottom: 2rem;
+}
+
+/* Contenedor de la lista (Crece de manera infinita hacia abajo) */
+.lista-juegos {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1.25rem;
+}
+
+/* Los rectángulos de los juegos */
+.item-revision {
+    background-color: #8F1952;
+    color: #FFFFFF;
+    font-size: 1.25rem;
+    font-family: 'Inter', sans-serif;
+
+    width: 100%;
+    min-height: 3.5rem; /* Mismo alto exacto que el .input-oscuro de editor_revision.css */
+    padding: 0 1.25rem;
+
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Efecto al pasar el ratón */
+.item-revision:hover {
+    background-color: #37105B;
+    transform: translateX(0.3rem);
+}

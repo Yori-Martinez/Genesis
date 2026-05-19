@@ -1,0 +1,235 @@
+/* ============================================================
+   1. RESET BÁSICO Y CONFIGURACIÓN GLOBAL
+   ============================================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+.body-biblioteca {
+    background: linear-gradient(60.2deg, #37105C -5.3%, #8F1952 58.78%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Evitamos scroll general si no hace falta */
+}
+
+/* ============================================================
+   2. CABECERA (EXTRAÍDA DIRECTAMENTE DE TU tienda.css)
+   ============================================================ */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: linear-gradient(60.5deg, #37105B 35.73%, #4B2272 61.77%, #8F1952 95.26%, #8F1952 119.44%);
+    height: 7.5vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 3.5%;
+    box-shadow: 0 0.25rem 0.6rem rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+    color: #FFFFFF;
+    font-weight: 900;
+    font-size: 3.2rem;
+    letter-spacing: -0.03em;
+}
+
+.nav {
+    display: flex;
+    gap: 3.5rem;
+    margin-left: 6rem;
+}
+
+.link {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.5rem;
+    font-family: 'Kokoro', sans-serif;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: color 0.3s ease;
+}
+
+.link:hover, .link.active {
+    color: #FFFFFF;
+}
+
+.user-slot {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1.0625rem;
+}
+
+.user-name {
+    color: #FFFFFF;
+    font-size: 1.75rem;
+    font-family: 'Kokoro', sans-serif;
+    text-transform: capitalize;
+    text-align: right;
+}
+
+.user-avatar {
+    width: 3.375rem;
+    height: 3.4375rem;
+    background: url('../img/image.png') center/cover no-repeat;
+    border-radius: 50%;
+    background-color: #8F1952;
+}
+
+/* ============================================================
+   3. ESTRUCTURA DE LA PÁGINA (SIDEBAR + MAIN)
+   ============================================================ */
+.layout-biblioteca {
+    display: flex;
+    flex-grow: 1;
+    /* Ocupa exactamente el alto restante de la pantalla */
+    height: calc(100vh - 7.5vh);
+}
+
+/* --- BARRA LATERAL (290px exactos del Figma) --- */
+.sidebar-biblioteca {
+    width: 18.125rem; /* 290px */
+    height: 100%;
+    background: conic-gradient(from 245.52deg at 53.45% 53.71%, #8F1952 0deg, #5A206A 167.46deg, #4B2272 360deg);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-y: auto;
+}
+
+/* Caja oscura de arriba (120px) */
+.sidebar-header {
+    width: 100%;
+    height: 7.5rem; /* 120px */
+    background: #37105B;
+    flex-shrink: 0;
+}
+
+/* Lista de juegos en la barra */
+.sidebar-lista {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-juego {
+    width: 100%;
+    height: 2.5rem; /* 40px */
+    display: flex;
+    align-items: center;
+    padding-left: 1rem; /* 16px de margen izquierdo según tus coordenadas */
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.item-juego:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.icono-juego {
+    width: 2rem; /* 32px */
+    height: 1.75rem; /* 28px */
+    object-fit: contain;
+}
+
+.texto-juego {
+    color: #FFFFFF;
+    font-size: 1.25rem; /* 20px */
+    margin-left: 0.3125rem; /* 5px de separación para llegar a los 53px exactos */
+    font-family: 'Kokoro', sans-serif;
+    text-transform: capitalize;
+}
+
+/* --- CONTENEDOR DE TARJETAS --- */
+.main-biblioteca {
+    flex-grow: 1;
+    /* Margen exacto: 30px arriba (1.875rem), 28px izquierda de separación con la barra (1.75rem) */
+    padding: 1.875rem 2rem 2rem 1.75rem;
+    overflow-y: auto; /* Permite scroll solo en esta parte si hay muchos juegos */
+}
+
+/* ============================================================
+   4. TARJETAS DE JUEGO (5 COLUMNAS EXACTAS Y FLUIDAS)
+   ============================================================ */
+.grid-biblioteca {
+    display: grid;
+    /* MAGIA: Forzamos exactamente 5 columnas elásticas.
+       Así siempre habrá 5 juegos por fila sin importar el tamaño de tu monitor */
+    grid-template-columns: repeat(5, 1fr);
+    /* 14px de separación vertical, 28px de separación horizontal */
+    gap: 0.875rem 1.75rem;
+    width: 100%;
+}
+
+.card-biblioteca {
+    width: 100%;
+    /* Mantiene la proporción exacta de tu Figma (240x388) sin usar medidas fijas que rompan la pantalla */
+    aspect-ratio: 240 / 388;
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.2);
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================================
+   5. BOTÓN JUGAR (ALINEADO A LA DERECHA)
+   ============================================================ */
+/* Capa oscura que aparece por debajo en hover */
+.overlay-biblioteca {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 6.5rem;
+    background: linear-gradient(180deg, rgba(55, 16, 92, 0) 0%, rgba(143, 25, 82, 0.9) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+
+    /* ESTO EMPUJA EL BOTÓN HACIA LA DERECHA */
+    justify-content: flex-end;
+    align-items: center;
+    /* Le damos un pequeño margen para que no choque contra la pared */
+    padding-right: 1rem;
+    backdrop-filter: blur(2px);
+}
+
+.card-biblioteca:hover .overlay-biblioteca {
+    opacity: 1;
+}
+
+/* Botón jugar (Ajustado para que respire bien dentro de la tarjeta) */
+.btn-jugar {
+    width: 60%; /* Hacemos el botón un poco fluido para que no se salga al encoger la pantalla */
+    max-width: 8.625rem; /* Tope exacto de 138px de tu Figma */
+    height: 2.875rem; /* 46px */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #FFFFFF;
+    font-size: 1.6rem;
+    font-family: 'Kokoro', sans-serif;
+    border: none;
+    border-radius: 0.9375rem; /* 15px */
+    cursor: pointer;
+    background: radial-gradient(circle at right, #37105C 10%, #831149 100%);
+    box-shadow: 0 4px 13.7px rgba(0, 0, 0, 0.65);
+    transition: transform 0.2s ease;
+}
+
+/* Triangulito de Play (▶) */
+.btn-jugar::before {
+    content: "▶";
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+
+.btn-jugar:hover {
+    transform: translateY(-0.125rem);
+}

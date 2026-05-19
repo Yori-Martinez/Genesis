@@ -1,0 +1,256 @@
+/* ============================================================
+   1. RESET BÁSICO Y CONFIGURACIÓN GLOBAL
+   ============================================================ */
+/*@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');
+/* Si Kokoro está en Google Fonts, la importas aquí. Si es local, usa @font-face */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+.tienda {
+    background: linear-gradient(72.33deg, #37105C 6.2%, #8F1952 95.4%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================================
+   2. CABECERA (HEADER) FIJA Y SIN TRANSPARENCIA
+   ============================================================ */
+.header {
+    /* MAGIA PARA FIJAR EL HEADER ARRIBA AL HACER SCROLL */
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Asegura que siempre esté por encima de las tarjetas */
+
+    /* Fondo sólido y exacto de tu Figma */
+    background: linear-gradient(60.5deg, #37105B 35.73%, #4B2272 61.77%, #8F1952 95.26%, #8F1952 119.44%);
+    height: 7.5vh; /* 70px */
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    padding: 0 3.5%;
+    box-shadow: 0 0.25rem 0.6rem rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+    color: #FFFFFF;
+    font-weight: 900;
+    font-size: 3.2rem;
+    letter-spacing: -0.03em;
+}
+
+
+/* Navegación (Tienda / Biblioteca) */
+.nav {
+    display: flex;
+    gap: 3.5rem;
+    margin-left: 6rem; /* Empuja el menú un poco lejos del logo */
+}
+
+.link {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.5rem; /* 28px */
+    font-family: 'Kokoro', sans-serif;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: color 0.3s ease;
+}
+
+.link:hover, .link.active {
+    color: #FFFFFF;
+}
+
+/* Frame 1: Usuario + Imagen a la derecha */
+.user-slot {
+    margin-left: auto; /* Lo empuja contra la pared derecha del header */
+    display: flex;
+    align-items: center;
+    gap: 1.0625rem; /* Los 17px de tu Figma */
+}
+
+.user-name {
+    color: #FFFFFF;
+    font-size: 1.75rem; /* 28px */
+    font-family: 'Kokoro', sans-serif;
+    text-transform: capitalize;
+    text-align: right;
+}
+
+.user-avatar {
+    width: 3.375rem; /* 54px */
+    height: 3.4375rem; /* 55px */
+    background: url('../img/image.png') center/cover no-repeat; /* Cambia la ruta si tu imagen está en otro lado */
+    border-radius: 50%; /* Hace la foto circular si es cuadrada */
+    background-color: #8F1952; /* Color de relleno por si falla la imagen */
+}
+
+/* ============================================================
+   3. HERO BANNER GIGANTE (FLUIDO)
+   ============================================================ */
+.hero {
+    width: 100%;
+    /* Mantiene siempre la proporción 1920x850 al encoger la pantalla */
+    aspect-ratio: 1920 / 860;
+    max-height: 53.125rem;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.2);
+    background-position: center;
+    background-size: cover;
+}
+
+.overlay-hero {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(75.57deg, rgba(55, 16, 92, 0.8) 0.85%, rgba(143, 25, 82, 0.8) 32.42%, rgba(144, 73, 134, 0) 88.75%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.hero:hover .overlay-hero {
+    opacity: 1;
+}
+
+/* ============================================================
+   4. SECCIÓN DESCUBRIR (GRID ELÁSTICO)
+   ============================================================ */
+.descubrir {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* padding: arriba | derecha (64px) | abajo (47px) | izquierda (64px) */
+    padding: 3rem 3rem 2.5rem 3rem;
+}
+
+.titulo {
+    color: #FFFFFF;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    /* Eliminamos el max-width para que el título llegue hasta los 64px de la pared */
+    max-width: none;
+}
+
+/* El grid principal que se encoge automáticamente */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.98fr;
+    gap: 2rem; /* Exactamente 32px de separación horizontal */
+    width: 100%;
+    /* Eliminamos el max-width para que el grid ocupe todo el espacio respetando los 64px de padding */
+    max-width: none;
+}
+
+.col-p {
+    display: flex;
+    flex-direction: column;
+    /* El gap controla exactamente la separación vertical de 32px entre las dos tarjetas pequeñas */
+    gap: 2rem;
+}
+
+.col-g {
+    display: flex;
+}
+
+
+/* ============================================================
+   5. GAME CARDS (PROPORCIONES EXACTAS FIGMA)
+   ============================================================ */
+.card {
+    position: relative;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.05);
+    background-position: center;
+    background-size: cover;
+}
+
+/* Se calculan solas gracias al aspect-ratio */
+.card-p {
+    width: 100%;
+    aspect-ratio: 580 / 326;
+}
+
+.card-g {
+    width: 100%;
+    height: 100%;
+}
+
+.overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(2.5px);
+}
+
+.overlay-p {
+    background: linear-gradient(72.33deg, #37105C 6.2%, rgba(143, 25, 82, 0.5) 95.4%);
+}
+
+.overlay-g {
+    background: linear-gradient(39.92deg, #37105C 14.6%, rgba(143, 25, 82, 0.5) 102.88%);
+}
+
+.card:hover .overlay {
+    opacity: 1;
+}
+
+/* ============================================================
+   6. BOTONES INTERACTIVOS (MEDIDAS ORIGINALES Y HOVER FIGMA)
+   ============================================================ */
+.btn {
+    color: #FFFFFF;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0.25rem 0.85rem rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, #8F1952 0%, #37105C 100%);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:hover {
+    background: radial-gradient(circle at right, #37105C 10%, #831149 100%);
+    transform: translateY(-0.125rem);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.7);
+}
+
+/* Hero (315x104, 60px abajo, 70px derecha) */
+.btn-hero {
+    position: absolute;
+    width: 19.6875rem;
+    height: 6.5rem;
+    right: 4.375rem;
+    bottom: 3.75rem;
+    font-size: 2rem;
+    border-radius: 0.9rem;
+}
+
+/* Tarjeta Pequeña (180x60, 20px abajo, 25px derecha) */
+.btn-p {
+    position: absolute;
+    width: 9rem;
+    height: 3rem;
+    right: 1.5625rem;
+    bottom: 1.25rem;
+    font-size: 1.8rem;
+    border-radius: 0.93rem;
+}
+
+/* Tarjeta Grande (180x60, 20px abajo, 45px derecha) */
+.btn-g {
+    position: absolute;
+    width: 10rem;
+    height: 3.4rem;
+    right: 2.8125rem;
+    bottom: 1.25rem;
+    font-size: 2rem;
+    border-radius: 0.93rem;
+}
