@@ -34,3 +34,5 @@ CREATE TABLE biblioteca (
 
 INSERT INTO usuarios (username, email, password, rol) VALUES
     ('GabeNewell', 'papigave@tienda.com', '123456', 'ADMIN'),
+    ('ElDonJuan', 'editor@tienda.com', '1234', 'EDITOR'),
+    ('Elpepe67', 'jugador@tienda.com', '1234', 'JUGADOR');
