@@ -43,7 +43,7 @@ function cargarJuegosTienda() {
                         <div class="overlay overlay-p" style="display: flex; flex-direction: column; justify-content: center; padding: 2rem;">
                             <h3 style="color: white; font-size: 2rem; font-family: 'Kokoro', sans-serif;">${juego.titulo}</h3>
                             <p style="color: rgba(255,255,255,0.7); font-size: 1.2rem; margin-top: 0.5rem;">${juego.precio} €</p>
-                            <button class="btn btn-p" style="margin-top: 1rem;">Comprar</button>
+                            <button class="btn btn-p" style="margin-top: 1rem;" onclick="anadirAlCarrito(${juego.id})">Al Carrito</button>
                         </div>
                     `;
 
@@ -57,4 +57,18 @@ function cargarJuegosTienda() {
             document.getElementById('grid-tienda').style.display = 'none';
             document.getElementById('mensaje-vacio-tienda').style.display = 'block';
         });
+
+    
+    function anadirAlCarrito(idJuego) {
+        fetch('api/biblioteca', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id_juego: idJuego })
+        })
+            .then(r => r.json())
+            .then(datos => {
+                alert(datos.mensaje);
+            })
+            .catch(e => console.error(e));
+    }
 }
