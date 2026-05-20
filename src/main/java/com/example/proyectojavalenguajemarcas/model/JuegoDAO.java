@@ -227,18 +227,4 @@ public class JuegoDAO {
         }
         return lista;
     }
-
-    public boolean registrarUsuario(String username, String email, String password) {
-        String sql = "INSERT INTO usuarios (username, email, password, rol) VALUES (?, ?, ?, 'JUGADOR')";
-        try (Connection con = ConexionBD.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, username);
-            ps.setString(2, email);
-            ps.setString(3, password);
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }
