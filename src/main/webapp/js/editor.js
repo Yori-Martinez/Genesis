@@ -3,40 +3,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (formSubirJuego) {
         formSubirJuego.addEventListener('submit', (e) => {
-            e.preventDefault(); // Evitamos que la página se recargue
+            e.preventDefault();
 
-            // Capturamos los datos de los inputs
+
             const titulo = document.getElementById('titulo').value.trim();
             const descripcion = document.getElementById('descripcion').value.trim();
 
-            // Extraemos el nombre del archivo ZIP
+
             const inputZip = document.getElementById('zip');
             let nombreZip = "";
             if (inputZip.files.length > 0) {
                 nombreZip = inputZip.files[0].name;
             }
 
-            // Cumpliendo la rúbrica: Petición asíncrona enviando JSON con POST
+
             fetch('api/editor', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     titulo: titulo,
                     descripcion: descripcion,
                     archivoZipUrl: nombreZip
                 })
             })
-                // Cumpliendo la rúbrica: Manejo de promesas con then() y catch()
+
                 .then(respuesta => {
                     if (!respuesta.ok) {
                         throw new Error('Error en el servidor');
                     }
-                    return respuesta.json(); // Recepción de datos JSON
+                    return respuesta.json();
                 })
                 .then(datos => {
                     if (datos.exito) {
-                        alert(datos.mensaje); // "Juego subido con éxito"
-                        formSubirJuego.reset(); // Vaciamos el formulario
+                        alert(datos.mensaje);
+                        formSubirJuego.reset();
                     } else {
                         alert("Error: " + datos.mensaje);
                     }

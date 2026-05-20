@@ -27,7 +27,7 @@ public class EditorServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         JsonObject jsonRespuesta = new JsonObject();
 
-        // 1. SEGURIDAD: Comprobar que el usuario ha iniciado sesión
+
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("usuarioLogueado") == null) {
             jsonRespuesta.addProperty("exito", false);
@@ -36,7 +36,7 @@ public class EditorServlet extends HttpServlet {
             return;
         }
 
-        // 2. Comprobar que es un EDITOR o un ADMIN
+
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuarioLogueado.getRol().equals("JUGADOR")) {
             jsonRespuesta.addProperty("exito", false);
@@ -46,18 +46,18 @@ public class EditorServlet extends HttpServlet {
         }
 
         try {
-            // 3. Leer el JSON que nos envía JavaScript
+
             BufferedReader reader = req.getReader();
             JsonObject jsonRecibido = gson.fromJson(reader, JsonObject.class);
 
-            // 4. Crear el objeto Juego con los datos
+
             Juego nuevoJuego = new Juego();
             nuevoJuego.setTitulo(jsonRecibido.get("titulo").getAsString());
             nuevoJuego.setDescripcion(jsonRecibido.get("descripcion").getAsString());
             nuevoJuego.setArchivoZipUrl(jsonRecibido.get("archivoZipUrl").getAsString());
-            nuevoJuego.setIdEditor(usuarioLogueado.getId()); // Le asignamos como autor al usuario actual
+            nuevoJuego.setIdEditor(usuarioLogueado.getId());
 
-            // 5. Guardar en base de datos
+
             boolean guardado = juegoDAO.insertarJuego(nuevoJuego);
 
             if (guardado) {

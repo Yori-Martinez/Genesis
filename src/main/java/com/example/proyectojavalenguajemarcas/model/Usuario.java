@@ -13,9 +13,20 @@ public class Usuario {
         this.rol = rol;
     }
 
-    // Getters
-    public int getId() { return id; }
-    public String getUsername() { return username; }
-    public String getEmail() { return email; }
-    public String getRol() { return rol; }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getRol() {
+        return rol;
+    }
 }

@@ -8,18 +8,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const user = document.getElementById('username').value.trim();
             const pass = document.getElementById('password').value.trim();
 
-            // Petición asíncrona (fetch) mediante POST enviando JSON
+            
             fetch('api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: user, password: pass })
             })
-                // Manejo con then() y catch() exactamente como pide la rúbrica
+                
                 .then(respuesta => {
                     if (!respuesta.ok) {
                         throw new Error('Error en la respuesta del servidor');
                     }
-                    return respuesta.json(); // Recepción de datos mediante JSON
+                    return respuesta.json(); 
                 })
                 .then(datos => {
                     if (datos.exito) {

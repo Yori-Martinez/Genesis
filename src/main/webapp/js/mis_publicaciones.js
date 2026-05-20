@@ -22,15 +22,15 @@ function cargarMisPublicaciones() {
                     const item = document.createElement('div');
                     item.className = 'item-revision';
 
-                    // Modificamos el estilo de tu CSS por defecto para empujar el texto a los lados
-                    item.style.justifyContent = 'space-between';
-                    item.style.cursor = 'default'; // Quitamos la mano de click porque aquí no hace nada
 
-                    // Izquierda: El título
+                    item.style.justifyContent = 'space-between';
+                    item.style.cursor = 'default';
+
+
                     const tituloSpan = document.createElement('span');
                     tituloSpan.textContent = juego.titulo;
 
-                    // Derecha: El estado (Mapeamos la BD a lo que pediste visualmente)
+
                     const estadoSpan = document.createElement('span');
                     estadoSpan.style.fontWeight = 'bold';
                     estadoSpan.style.textTransform = 'uppercase';
@@ -38,13 +38,13 @@ function cargarMisPublicaciones() {
 
                     if (juego.estado === 'PENDIENTE') {
                         estadoSpan.textContent = 'Espera';
-                        estadoSpan.style.color = '#F5B041'; // Amarillo/Naranja
+                        estadoSpan.style.color = '#F5B041';
                     } else if (juego.estado === 'RECHAZADO') {
                         estadoSpan.textContent = 'Denegado';
-                        estadoSpan.style.color = '#E74C3C'; // Rojo
+                        estadoSpan.style.color = '#E74C3C';
                     } else if (juego.estado === 'PUBLICADO') {
                         estadoSpan.textContent = 'Aprobado';
-                        estadoSpan.style.color = '#2ECC71'; // Verde
+                        estadoSpan.style.color = '#2ECC71';
                     }
 
                     item.appendChild(tituloSpan);
