@@ -85,9 +85,14 @@
 .user-avatar {
     width: 3.375rem; /* 54px */
     height: 3.4375rem; /* 55px */
-    background: url('../img/image.png') center/cover no-repeat; /* Cambia la ruta si tu imagen está en otro lado */
-    border-radius: 50%; /* Hace la foto circular si es cuadrada */
-    background-color: #8F1952; /* Color de relleno por si falla la imagen */
+    border-radius: 50%; /* Conserva la estética circular perfecta */
+    background-color: #8F1952; /* Actúa como color de relleno por defecto si el usuario no tiene foto */
+
+    /* PROPIEDADES DE AJUSTE AUTOMÁTICO */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* ============================================================
@@ -99,7 +104,7 @@
     aspect-ratio: 1920 / 860;
     max-height: 53.125rem;
     position: relative;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: #1a082b; /* Color de fondo mientras carga */
     background-position: center;
     background-size: cover;
 }
@@ -107,14 +112,12 @@
 .overlay-hero {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(75.57deg, rgba(55, 16, 92, 0.8) 0.85%, rgba(143, 25, 82, 0.8) 32.42%, rgba(144, 73, 134, 0) 88.75%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    /* DEGRADADO PERMANENTE: Siempre visible para que las letras se lean bien */
+    background: linear-gradient(75.57deg, rgba(55, 16, 92, 0.95) 0.85%, rgba(143, 25, 82, 0.85) 32.42%, rgba(144, 73, 134, 0) 88.75%);
 }
 
-.hero:hover .overlay-hero {
-    opacity: 1;
-}
+/* (Eliminamos la regla .hero:hover .overlay-hero porque ya no es necesaria) */
+
 
 /* ============================================================
    4. SECCIÓN DESCUBRIR (GRID ELÁSTICO)

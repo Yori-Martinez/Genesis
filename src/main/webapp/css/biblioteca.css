@@ -13,11 +13,11 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Evitamos scroll general si no hace falta */
+    overflow: hidden;
 }
 
 /* ============================================================
-   2. CABECERA (EXTRAÍDA DIRECTAMENTE DE TU tienda.css)
+   2. CABECERA Y AVATAR DINÁMICO
    ============================================================ */
 .header {
     position: sticky;
@@ -73,12 +73,16 @@
     text-align: right;
 }
 
+/* El avatar preparado para recibir la imagen de MySQL */
 .user-avatar {
     width: 3.375rem;
     height: 3.4375rem;
-    background: url('../img/image.png') center/cover no-repeat;
     border-radius: 50%;
     background-color: #8F1952;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* ============================================================
@@ -87,13 +91,11 @@
 .layout-biblioteca {
     display: flex;
     flex-grow: 1;
-    /* Ocupa exactamente el alto restante de la pantalla */
     height: calc(100vh - 7.5vh);
 }
 
-/* --- BARRA LATERAL (290px exactos del Figma) --- */
 .sidebar-biblioteca {
-    width: 18.125rem; /* 290px */
+    width: 18.125rem;
     height: 100%;
     background: conic-gradient(from 245.52deg at 53.45% 53.71%, #8F1952 0deg, #5A206A 167.46deg, #4B2272 360deg);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -103,133 +105,227 @@
     overflow-y: auto;
 }
 
-/* Caja oscura de arriba (120px) */
 .sidebar-header {
     width: 100%;
-    height: 7.5rem; /* 120px */
+    height: 7.5rem;
     background: #37105B;
     flex-shrink: 0;
 }
 
-/* Lista de juegos en la barra */
 .sidebar-lista {
     display: flex;
     flex-direction: column;
 }
 
+/* Estilos de la lista de juegos del menú izquierdo */
 .item-juego {
     width: 100%;
-    height: 2.5rem; /* 40px */
+    height: 3rem;
     display: flex;
-    align-items: center;
-    padding-left: 1rem; /* 16px de margen izquierdo según tus coordenadas */
+    align-items: start;
+    padding: 0.8rem 1.5rem;
     cursor: pointer;
-    transition: background 0.2s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
 }
 
 .item-juego:hover {
     background: rgba(255, 255, 255, 0.1);
+    padding-left: 2rem;
+    border-left: 4px solid #d12f7a;
 }
 
 .icono-juego {
-    width: 2rem; /* 32px */
-    height: 1.75rem; /* 28px */
-    object-fit: contain;
+    width: 2rem;
+    height: 2rem;
+    object-fit: cover;
+    align-self: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    flex-shrink: 0;
 }
 
 .texto-juego {
     color: #FFFFFF;
-    font-size: 1.25rem; /* 20px */
-    margin-left: 0.3125rem; /* 5px de separación para llegar a los 53px exactos */
+    font-size: 1.1rem;
+    margin-left: 1rem;
     font-family: 'Kokoro', sans-serif;
-    text-transform: capitalize;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* --- CONTENEDOR DE TARJETAS --- */
+/* Panel derecho (donde van las tarjetas) */
 .main-biblioteca {
     flex-grow: 1;
-    /* Margen exacto: 30px arriba (1.875rem), 28px izquierda de separación con la barra (1.75rem) */
     padding: 1.875rem 2rem 2rem 1.75rem;
-    overflow-y: auto; /* Permite scroll solo en esta parte si hay muchos juegos */
+    overflow-y: auto;
 }
 
 /* ============================================================
-   4. TARJETAS DE JUEGO (5 COLUMNAS EXACTAS Y FLUIDAS)
+   4. EL BUSCADOR (DISEÑO TECH / NEÓN INFERIOR)
+   ============================================================ */
+.seccion-busqueda {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem auto 4rem auto;
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+}
+
+.seccion-busqueda input[type="text"] {
+    width: 100%;
+    padding: 1.2rem 2rem;
+    font-size: 1.3rem;
+    color: #ffffff;
+    background: rgba(20, 5, 35, 0.85);
+    border: none;
+    border-bottom: 3px solid #8F1952;
+    border-radius: 8px 8px 0 0;
+    outline: none;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+    font-family: 'Kokoro', sans-serif;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.seccion-busqueda input[type="text"]::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    text-transform: uppercase;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+}
+
+.seccion-busqueda input[type="text"]:focus {
+    background: rgba(30, 9, 51, 0.95);
+    border-bottom: 3px solid #d12f7a;
+    box-shadow: 0 15px 25px rgba(0,0,0,0.6), 0 5px 20px rgba(209, 47, 122, 0.5);
+    transform: translateY(-3px);
+}
+
+/* ============================================================
+   5. MENSAJE VACÍO (PANEL DE CRISTAL CENTRADO)
+   ============================================================ */
+.mensaje-vacio-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 3rem;
+    background: linear-gradient(145deg, rgba(55, 16, 91, 0.4) 0%, rgba(143, 25, 82, 0.1) 100%);
+    border: 2px dashed rgba(143, 25, 82, 0.7);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+
+.mensaje-vacio-grid:hover {
+    border-color: rgba(209, 47, 122, 0.9);
+    background: linear-gradient(145deg, rgba(55, 16, 91, 0.5) 0%, rgba(143, 25, 82, 0.2) 100%);
+    box-shadow: 0 8px 32px rgba(143, 25, 82, 0.2);
+}
+
+.mensaje-vacio-grid p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.8rem;
+    font-family: 'Kokoro', sans-serif;
+    letter-spacing: 1px;
+    margin: 0;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+}
+
+/* ============================================================
+   6. TARJETAS DE JUEGO (CUADRÍCULA DE 5 COLUMNAS)
    ============================================================ */
 .grid-biblioteca {
     display: grid;
-    /* MAGIA: Forzamos exactamente 5 columnas elásticas.
-       Así siempre habrá 5 juegos por fila sin importar el tamaño de tu monitor */
     grid-template-columns: repeat(5, 1fr);
-    /* 14px de separación vertical, 28px de separación horizontal */
     gap: 0.875rem 1.75rem;
     width: 100%;
 }
 
 .card-biblioteca {
     width: 100%;
-    /* Mantiene la proporción exacta de tu Figma (240x388) sin usar medidas fijas que rompan la pantalla */
     aspect-ratio: 240 / 388;
     height: auto;
     background-color: rgba(0, 0, 0, 0.2);
     background-position: center;
     background-size: cover;
+    background-repeat: no-repeat;
     position: relative;
     overflow: hidden;
+    border-radius: 12px;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-biblioteca:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px #8F1952;
 }
 
 /* ============================================================
-   5. BOTÓN JUGAR (ALINEADO A LA DERECHA)
+   REEMPLAZA DESDE .overlay-biblioteca HASTA EL FINAL DEL ARCHIVO
    ============================================================ */
-/* Capa oscura que aparece por debajo en hover */
+
 .overlay-biblioteca {
     position: absolute;
     bottom: 0; left: 0; right: 0;
-    height: 6.5rem;
-    background: linear-gradient(180deg, rgba(55, 16, 92, 0) 0%, rgba(143, 25, 82, 0.9) 100%);
+    height: 80px; /* Exactamente los 80px del Rectangle 8 de Figma */
+    /* Degradado lineal de Figma: de morado oscuro a rosa */
+    background: linear-gradient(90deg, rgba(75, 34, 114, 0.9) 0%, rgba(143, 25, 82, 0.8) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
     display: flex;
-
-    /* ESTO EMPUJA EL BOTÓN HACIA LA DERECHA */
+    /* justify-content: flex-end empuja el botón a la derecha, dejando 14px de margen igual que en Figma (240 - 138 - 88 = 14) */
     justify-content: flex-end;
     align-items: center;
-    /* Le damos un pequeño margen para que no choque contra la pared */
-    padding-right: 1rem;
-    backdrop-filter: blur(2px);
+    padding-right: 14px;
 }
 
 .card-biblioteca:hover .overlay-biblioteca {
     opacity: 1;
 }
 
-/* Botón jugar (Ajustado para que respire bien dentro de la tarjeta) */
+/* El botón calcado a la propiedad "Boton_Alcarrito" / "Jugar" de Figma */
 .btn-jugar {
-    width: 60%; /* Hacemos el botón un poco fluido para que no se salga al encoger la pantalla */
-    max-width: 8.625rem; /* Tope exacto de 138px de tu Figma */
-    height: 2.875rem; /* 46px */
+    width: 138px;
+    height: 46px;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #FFFFFF;
-    font-size: 1.6rem;
     font-family: 'Kokoro', sans-serif;
+    font-size: 1.4rem; /* Tamaño de fuente exacto del texto "Jugar" */
+    letter-spacing: -0.005em;
+    text-transform: capitalize;
     border: none;
-    border-radius: 0.9375rem; /* 15px */
+    border-radius: 15px;
     cursor: pointer;
-    background: radial-gradient(circle at right, #37105C 10%, #831149 100%);
-    box-shadow: 0 4px 13.7px rgba(0, 0, 0, 0.65);
+    /* Simulamos el radial-gradient complejo de Figma */
+    background: radial-gradient(circle at left bottom, #8F1952 0%, #37105C 100%);
+    box-shadow: 0px 4.6px 15.75px rgba(0, 0, 0, 0.65);
     transition: transform 0.2s ease;
 }
 
-/* Triangulito de Play (▶) */
+/* Simulamos la capa "Polygon 1" de Figma (El triangulito de Play) */
 .btn-jugar::before {
     content: "▶";
-    font-size: 1.2rem;
-    margin-right: 0.5rem;
+    font-size: 1.5rem; /* Lo escalamos para que parezca de 32x33px */
+    color: #D9D9D9; /* El color exacto del polígono en tu diseño */
+    margin-right: 6px;
+    /* Ajuste fino para centrar el icono de texto verticalmente con la fuente Kokoro */
+    transform: translateY(-2px);
 }
 
 .btn-jugar:hover {
-    transform: translateY(-0.125rem);
+    transform: scale(1.05); /* Efecto extra para que parezca clickeable */
 }

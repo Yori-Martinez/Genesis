@@ -1,20 +1,23 @@
 package com.example.proyectojavalenguajemarcas.controller;
 
-import com.example.proyectojavalenguajemarcas.model.Juego;
 import com.example.proyectojavalenguajemarcas.model.JuegoDAO;
 import com.example.proyectojavalenguajemarcas.model.Usuario;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 
+// 🚨 ANOTACIÓN CLAVE: Permite al Servlet desempaquetar archivos físicos de la petición HTTP
+@MultipartConfig
 @WebServlet("/api/editor")
 public class EditorServlet extends HttpServlet {
 
@@ -27,7 +30,7 @@ public class EditorServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         JsonObject jsonRespuesta = new JsonObject();
 
-
+        // 1. VERIFICACIÓN DE SESIÓN
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("usuarioLogueado") == null) {
             jsonRespuesta.addProperty("exito", false);
@@ -36,7 +39,7 @@ public class EditorServlet extends HttpServlet {
             return;
         }
 
-
+        // 2. VERIFICACIÓN DE ROL (Solo el EDITOR puede subir juegos)
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuarioLogueado.getRol().equals("JUGADOR")) {
             jsonRespuesta.addProperty("exito", false);
@@ -46,32 +49,41 @@ public class EditorServlet extends HttpServlet {
         }
 
         try {
+            // 3. LECTURA MULTIPART: Como no es JSON, usamos getParameter() para los textos
+            String titulo = req.getParameter("titulo");
+            String descripcion = req.getParameter("descripcion");
 
-            BufferedReader reader = req.getReader();
-            JsonObject jsonRecibido = gson.fromJson(reader, JsonObject.class);
+            // Extraemos la pieza binaria que contiene el archivo ZIP
+            Part zipPart = req.getPart("zip");
 
+            // Comprobación de seguridad en el backend por si fallase el frontend
+            if (zipPart == null || zipPart.getSize() == 0) {
+                jsonRespuesta.addProperty("exito", false);
+                jsonRespuesta.addProperty("mensaje", "El archivo ZIP es obligatorio.");
+                resp.getWriter().write(gson.toJson(jsonRespuesta));
+                return;
+            }
 
-            Juego nuevoJuego = new Juego();
-            nuevoJuego.setTitulo(jsonRecibido.get("titulo").getAsString());
-            nuevoJuego.setDescripcion(jsonRecibido.get("descripcion").getAsString());
-            nuevoJuego.setArchivoZipUrl(jsonRecibido.get("archivoZipUrl").getAsString());
-            nuevoJuego.setIdEditor(usuarioLogueado.getId());
+            // 4. PERSISTENCIA EN BASE DE DATOS
+            // Convertimos el archivo ZIP a un flujo de bytes continuo (InputStream)
+            InputStream zipStream = zipPart.getInputStream();
 
+            // Llamamos al NUEVO método del DAO que inyecta el InputStream en la columna LONGBLOB
+            boolean guardado = juegoDAO.insertarJuegoConZip(titulo, descripcion, usuarioLogueado.getId(), zipStream);
 
-            boolean guardado = juegoDAO.insertarJuego(nuevoJuego);
-
+            // 5. RESPUESTA AL CLIENTE
             if (guardado) {
                 jsonRespuesta.addProperty("exito", true);
-                jsonRespuesta.addProperty("mensaje", "Juego subido con éxito. Pendiente de revisión.");
+                jsonRespuesta.addProperty("mensaje", "Juego y ZIP subidos con éxito. Pendiente de revisión.");
             } else {
                 jsonRespuesta.addProperty("exito", false);
-                jsonRespuesta.addProperty("mensaje", "Error al guardar en la base de datos.");
+                jsonRespuesta.addProperty("mensaje", "Error al guardar los binarios en la base de datos.");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             jsonRespuesta.addProperty("exito", false);
-            jsonRespuesta.addProperty("mensaje", "Error procesando los datos.");
+            jsonRespuesta.addProperty("mensaje", "Error procesando el formulario multipart.");
         }
 
         resp.getWriter().write(gson.toJson(jsonRespuesta));

@@ -30,32 +30,42 @@
       <div class="col-izq">
         <div class="input-grupo">
           <label for="titulo">Titulo Del Juego</label>
-          <input type="text" id="titulo" class="input-oscuro" value="Patata" readonly>
+          <input type="text" id="titulo" class="input-oscuro" readonly>
         </div>
-
         <div class="input-grupo">
           <label for="descripcion">Descripcion Del Juego</label>
-          <textarea id="descripcion" class="textarea-oscuro" readonly>No Mas De 200 Caracteres</textarea>
+          <textarea id="descripcion" class="textarea-oscuro" readonly></textarea>
         </div>
       </div>
 
       <div class="col-der">
-
         <div class="grupo-archivo">
           <label>Archivos Del Juego (.Zip)</label>
           <a href="#" class="btn-archivo" style="text-decoration: none;">Descargar Archivos</a>
+        </div>
+
+        <div class="campo-formulario">
+          <label>Carátula Oficial del Videojuego:</label>
+          <input type="file" id="caratulaFile" accept="image/jpeg, image/png" style="display: none;">
+          <button type="button" class="btn-interactivo btn-secundario" onclick="document.getElementById('caratulaFile').click()">
+            Examinar Equipo...
+          </button>
+          <span id="nombreArchivoSel" style="color: rgba(255,255,255,0.5); margin-left: 10px; font-size: 1.1rem;">
+            Ningún archivo seleccionado
+          </span>
         </div>
 
         <div class="botones-decision">
           <button type="button" class="btn-enviar">Aceptar</button>
           <button type="button" class="btn-enviar">Denegar</button>
         </div>
-
       </div>
 
     </form>
   </div>
 </main>
+
+<script src="js/revision.js"></script>
 <script src="js/auth.js"></script>
 </body>
 </html>

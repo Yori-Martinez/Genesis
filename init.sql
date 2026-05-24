@@ -7,7 +7,8 @@ CREATE TABLE usuarios (
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     rol ENUM('JUGADOR', 'EDITOR', 'ADMIN') DEFAULT 'JUGADOR',
-    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    avatar_contenido LONGBLOB
 );
 
 CREATE TABLE juegos (
@@ -15,8 +16,8 @@ CREATE TABLE juegos (
     titulo VARCHAR(100) NOT NULL,
     descripcion TEXT NOT NULL,
     precio DECIMAL(10, 2) DEFAULT 0.00,
-    caratula_url VARCHAR(255),
-    archivo_zip_url VARCHAR(255),
+    caratula_contenido LONGBLOB,
+    zip_contenido LONGBLOB,
     estado ENUM('PENDIENTE', 'PUBLICADO', 'RECHAZADO') DEFAULT 'PENDIENTE',
     id_editor INT,
     fecha_subida TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

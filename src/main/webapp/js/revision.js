@@ -8,23 +8,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+document.getElementById('caratulaFile').addEventListener('change', function() {
+    const archivo = this.files[0];
+    document.getElementById('nombreArchivoSel').textContent = archivo ? archivo.name : "Ningún archivo seleccionado";
+});
+
 function obtenerDetalleJuego(id) {
     fetch(`api/revision?id=${id}`)
         .then(respuesta => {
-            if (!respuesta.ok) {
-                throw new Error('Error al obtener detalles');
-            }
+            if (!respuesta.ok) throw new Error('Error al obtener detalles');
             return respuesta.json();
         })
         .then(juego => {
             if (juego) {
                 document.getElementById('titulo').value = juego.titulo;
                 document.getElementById('descripcion').value = juego.descripcion;
+
+                // Conectamos el botón para descargar el ZIP directamente de MySQL
+                const btnDescarga = document.querySelector('.btn-archivo');
+                if (btnDescarga) {
+                    btnDescarga.href = juego.archivoZipUrl;
+                }
             }
         })
-        .catch(error => {
-            console.error(error);
-        });
+        .catch(error => console.error(error));
 }
 
 function configurarBotonesDecision(id) {
@@ -35,36 +42,42 @@ function configurarBotonesDecision(id) {
         const btnDenegar = botones[1];
 
         btnAceptar.addEventListener('click', () => {
-            enviarDecision(id, 'PUBLICADO');
+            const archivoImagen = document.getElementById('caratulaFile').files[0];
+            if (!archivoImagen) {
+                alert("Debes cargar una carátula desde tu equipo para poder aprobar el videojuego.");
+                return;
+            }
+            enviarDecisionForm(id, 'PUBLICADO', archivoImagen);
         });
 
         btnDenegar.addEventListener('click', () => {
-            enviarDecision(id, 'RECHAZADO');
+            // Mandamos estado RECHAZADO, no hace falta foto
+            enviarDecisionForm(id, 'RECHAZADO', null);
         });
     }
 }
 
-function enviarDecision(id, estado) {
+function enviarDecisionForm(id, estado, archivoImagen) {
+    const paqueteDatos = new FormData();
+    paqueteDatos.append("id", id);
+    paqueteDatos.append("estado", estado); // 'PUBLICADO' o 'RECHAZADO'
+
+    if (archivoImagen) {
+        paqueteDatos.append("caratula", archivoImagen);
+    }
+
     fetch('api/revision', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: parseInt(id), estado: estado })
+        body: paqueteDatos
     })
-        .then(respuesta => {
-            if (!respuesta.ok) {
-                throw new Error('Error en el servidor');
-            }
-            return respuesta.json();
-        })
+        .then(r => r.json())
         .then(datos => {
             if (datos.exito) {
-                alert(datos.mensaje);
+                alert(estado === 'PUBLICADO' ? "Juego publicado de forma persistente." : "Juego rechazado. Ha sido eliminado de la cola.");
                 window.location.href = 'lista_revision.html';
             } else {
-                alert(datos.mensaje);
+                alert("Error: " + datos.mensaje);
             }
         })
-        .catch(error => {
-            console.error(error);
-        });
+        .catch(e => console.error("Fallo de red:", e));
 }
