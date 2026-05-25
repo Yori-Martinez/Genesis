@@ -98,7 +98,7 @@
     width: 18.125rem;
     height: 100%;
     background: conic-gradient(from 245.52deg at 53.45% 53.71%, #8F1952 0deg, #5A206A 167.46deg, #4B2272 360deg);
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -163,47 +163,79 @@
 }
 
 /* ============================================================
-   4. EL BUSCADOR (DISEÑO TECH / NEÓN INFERIOR)
+   EL BUSCADOR (DISEÑO MODERNO GLASSMORPHISM)
    ============================================================ */
-.seccion-busqueda {
+/* Contenedor que agrupa el input y el botón de filtro */
+.buscador-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 2rem auto 4rem auto;
+    gap: 15px; /* Separación entre la barra y el botón */
+    margin: 2rem auto 3rem auto;
     width: 100%;
-    max-width: 600px;
+    max-width: 17rem;
     position: relative;
 }
 
-.seccion-busqueda input[type="text"] {
+/* La barra de texto */
+.input-buscador {
     width: 100%;
-    padding: 1.2rem 2rem;
-    font-size: 1.3rem;
+    padding: 1.2rem 2.5rem;
+    font-size: 1.2rem;
     color: #ffffff;
-    background: rgba(20, 5, 35, 0.85);
-    border: none;
-    border-bottom: 3px solid #8F1952;
-    border-radius: 8px 8px 0 0;
+    /* Fondo morado oscuro semitransparente para el efecto cristal */
+    background: rgba(55, 16, 92, 0.3);
+    border: 2px solid rgba(143, 25, 82, 0.4);
+    border-radius: 15px;
     outline: none;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.input-buscador::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 300;
+    font-style: italic;
+}
+
+/* El resplandor al hacer clic para escribir */
+.input-buscador:focus {
+    background: rgba(55, 16, 92, 0.6);
+    border-color: #d12f7a;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(143, 25, 82, 0.6);
+    transform: translateY(-2px);
+}
+
+/* Estilo para que el botón de filtro lateral encaje con el diseño de cristal */
+.btn-filtro {
+    background: rgba(55, 16, 92, 0.3);
+    border: 2px solid rgba(143, 25, 82, 0.4);
+    border-radius: 50%; /* Botón completamente redondo */
+    width: 55px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
     transition: all 0.3s ease;
-    font-family: 'Kokoro', sans-serif;
-    letter-spacing: 1px;
-    text-align: center;
+    flex-shrink: 0;
 }
 
-.seccion-busqueda input[type="text"]::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-    text-transform: uppercase;
-    font-size: 1.1rem;
-    letter-spacing: 2px;
+.btn-filtro svg {
+    width: 24px;
+    height: 24px;
 }
 
-.seccion-busqueda input[type="text"]:focus {
-    background: rgba(30, 9, 51, 0.95);
-    border-bottom: 3px solid #d12f7a;
-    box-shadow: 0 15px 25px rgba(0,0,0,0.6), 0 5px 20px rgba(209, 47, 122, 0.5);
-    transform: translateY(-3px);
+.btn-filtro:hover {
+    background: rgba(143, 25, 82, 0.6);
+    border-color: #d12f7a;
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(209, 47, 122, 0.4);
 }
 
 /* ============================================================
@@ -262,7 +294,6 @@
     background-repeat: no-repeat;
     position: relative;
     overflow: hidden;
-    border-radius: 12px;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -312,7 +343,7 @@
     cursor: pointer;
     /* Simulamos el radial-gradient complejo de Figma */
     background: radial-gradient(circle at left bottom, #8F1952 0%, #37105C 100%);
-    box-shadow: 0px 4.6px 15.75px rgba(0, 0, 0, 0.65);
+    box-shadow: 0 4.6px 15.75px rgba(0, 0, 0, 0.65);
     transition: transform 0.2s ease;
 }
 

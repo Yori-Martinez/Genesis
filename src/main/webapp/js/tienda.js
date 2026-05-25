@@ -10,18 +10,14 @@ function cargarTienda() {
         .then(juegos => {
             if (!juegos || juegos.length === 0) return;
 
-            // 1. HERO BANNER: El primer elemento del array va arriba por ser el más reciente
+            // 1. HERO BANNER: El más nuevo se mantiene fijo arriba
             const juegoMasNuevo = juegos[0];
             actualizarHeroBanner(juegoMasNuevo);
 
-            // 2. SECCIÓN DESTACADOS: El resto de juegos pueblan el grid inferior
+            // 2. SECCIÓN DESTACADOS: El resto se distribuyen abajo
             let restoJuegos = juegos.slice(1);
-
-            // 3. CONTROL DE REFRESCOS: Algoritmo Fisher-Yates cada 5 cargas
             restoJuegos = gestionarBarajado(restoJuegos);
-
-            // 4. RENDERIZADO FINAL
-            renderizarGrid(restoJuegos);
+            renderizarGridDestacados(restoJuegos);
         })
         .catch(error => console.error('Error cargando la tienda:', error));
 }
@@ -62,28 +58,50 @@ function gestionarBarajado(juegos) {
     }
 }
 
-function renderizarGrid(juegos) {
-    const grid = document.getElementById('grid-tienda');
+function renderizarGridDestacados(juegos) {
+    const grid = document.getElementById('grid-destacados');
     if (!grid) return;
 
     grid.innerHTML = '';
 
-    juegos.forEach(juego => {
-        const card = document.createElement('article');
-        card.className = 'card';
-        card.style.backgroundImage = `url('${juego.caratulaUrl}')`;
-        card.style.backgroundSize = 'cover';
-        card.style.backgroundPosition = 'center';
+    // Dividimos la lista para cumplir con tu diseño de 3 columnas (2, 2, 1)
+    const colIzq = juegos.slice(0, 2);
+    const colCen = juegos.slice(2, 4);
+    const colDer = juegos.slice(4, 5);
 
-        card.innerHTML = `
-            <div class="overlay overlay-p" style="display: flex; flex-direction: column; justify-content: center; padding: 2rem;">
-                <h3 style="color: white; font-size: 2rem; font-family: 'Kokoro', sans-serif;">${juego.titulo}</h3>
-                <p style="color: rgba(255,255,255,0.7); font-size: 1.2rem; margin-top: 0.5rem;">${juego.precio} €</p>
-                <button class="btn btn-p" style="margin-top: 1rem;" onclick="anadirAlCarrito(${juego.id})">Al Carrito</button>
+    let htmlFinal = '';
+
+    // Columna Izquierda (Pequeñas apiladas)
+    htmlFinal += `<div class="col-pequenas">`;
+    colIzq.forEach(j => { htmlFinal += generarHTMLTarjeta(j, 'card-p', 'overlay-p', 'btn-p'); });
+    htmlFinal += `</div>`;
+
+    // Columna Centro (Pequeñas apiladas)
+    htmlFinal += `<div class="col-pequenas">`;
+    colCen.forEach(j => { htmlFinal += generarHTMLTarjeta(j, 'card-p', 'overlay-p', 'btn-p'); });
+    htmlFinal += `</div>`;
+
+    // Columna Derecha (Tarjeta vertical gigante)
+    htmlFinal += `<div class="col-grande">`;
+    colDer.forEach(j => { htmlFinal += generarHTMLTarjeta(j, 'card-g', 'overlay-g', 'btn-g'); });
+    htmlFinal += `</div>`;
+
+    grid.innerHTML = htmlFinal;
+}
+
+function generarHTMLTarjeta(juego, claseCard, claseOverlay, claseBtn) {
+    // Eliminamos el precio e inyectamos título arriba y botón abajo de forma independiente
+    return `
+        <article class="card ${claseCard}" style="background-image: url('${juego.caratulaUrl}');">
+            <div class="overlay ${claseOverlay}">
+                <div class="bloque-superior-card">
+                    <h3 class="titulo-juego-card">${juego.titulo}</h3>
+                    <p class="desc-juego-card">${juego.descripcion || ''}</p>
+                </div>
+                <button class="btn ${claseBtn}" onclick="anadirAlCarrito(${juego.id})">Al Carrito</button>
             </div>
-        `;
-        grid.appendChild(card);
-    });
+        </article>
+    `;
 }
 
 function anadirAlCarrito(idJuego) {
