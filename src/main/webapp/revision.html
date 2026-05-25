@@ -1,68 +1,70 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel Admin - Detalles del Juego</title>
-  <link rel="stylesheet" href="css/editor_revision.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin - Detalles del Juego</title>
+    <link rel="stylesheet" href="css/editor_revision.css">
 </head>
 <body class="body-editor">
 
 <header class="header">
-  <h1 class="logo">icono</h1>
-  <nav class="nav" id="menu-principal">
-    <a href="tienda.html" class="link">Tienda</a>
-    <a href="biblioteca.html" class="link">Biblioteca</a>
-    <a href="editor.html" class="link req-editor" style="display: none;">Subir Juego</a>
-    <a href="mis_publicaciones.html" class="link req-editor" style="display: none;">Mis Publicaciones</a>
-    <a href="revision.html" class="link active req-admin" style="display: none;">Revision</a>
-  </nav>
-  <div class="user-slot">
-    <span id="username" class="user-name">Invitado</span>
-    <div class="user-avatar"></div>
-  </div>
+    <h1 class="logo">icono</h1>
+    <nav class="nav" id="menu-principal">
+        <a href="tienda.html" class="link">Tienda</a>
+        <a href="biblioteca.html" class="link">Biblioteca</a>
+        <a href="editor.html" class="link req-editor" style="display: none;">Subir Juego</a>
+        <a href="mis_publicaciones.html" class="link req-editor" style="display: none;">Mis Publicaciones</a>
+        <a href="revision.html" class="link active req-admin" style="display: none;">Revision</a>
+    </nav>
+    <div class="user-slot">
+        <span id="username" class="user-name">Invitado</span>
+        <div class="user-avatar"></div>
+    </div>
 </header>
 
 <main class="main">
-  <div class="tarjeta">
-    <form class="form-compacto">
+    <div class="tarjeta">
+        <form class="form-compacto">
 
-      <div class="col-izq">
-        <div class="input-grupo">
-          <label for="titulo">Titulo Del Juego</label>
-          <input type="text" id="titulo" class="input-oscuro" readonly>
-        </div>
-        <div class="input-grupo">
-          <label for="descripcion">Descripcion Del Juego</label>
-          <textarea id="descripcion" class="textarea-oscuro" readonly></textarea>
-        </div>
-      </div>
+            <div class="col-izq">
+                <div class="input-grupo">
+                    <label for="titulo">Titulo Del Juego</label>
+                    <input type="text" id="titulo" class="input-oscuro" readonly>
+                </div>
+                <div class="input-grupo">
+                    <label for="descripcion">Descripcion Del Juego</label>
+                    <textarea id="descripcion" class="textarea-oscuro" readonly></textarea>
+                </div>
+            </div>
 
-      <div class="col-der">
-        <div class="grupo-archivo">
-          <label>Archivos Del Juego (.Zip)</label>
-          <a href="#" class="btn-archivo" style="text-decoration: none;">Descargar Archivos</a>
-        </div>
+            <div class="col-der">
+                <div class="grupo-archivo">
+                    <label>Archivos Del Juego (.Zip)</label>
+                    <a href="#" class="btn-archivo" style="text-decoration: none;">Descargar Archivos</a>
+                </div>
 
-        <div class="campo-formulario">
-          <label>Carátula Oficial del Videojuego:</label>
-          <input type="file" id="caratulaFile" accept="image/jpeg, image/png" style="display: none;">
-          <button type="button" class="btn-interactivo btn-secundario" onclick="document.getElementById('caratulaFile').click()">
-            Examinar Equipo...
-          </button>
-          <span id="nombreArchivoSel" style="color: rgba(255,255,255,0.5); margin-left: 10px; font-size: 1.1rem;">
+                <div class="campo-formulario">
+                    <label>Carátula Oficial del Videojuego:</label>
+                    <input type="file" id="caratulaFile" accept="image/jpeg, image/png" style="display: none;">
+                    <button type="button" class="btn-interactivo btn-secundario"
+                            onclick="document.getElementById('caratulaFile').click()">
+                        Examinar Equipo...
+                    </button>
+                    <span id="nombreArchivoSel"
+                          style="color: rgba(255,255,255,0.5); margin-left: 10px; font-size: 1.1rem;">
             Ningún archivo seleccionado
           </span>
-        </div>
+                </div>
 
-        <div class="botones-decision">
-          <button type="button" class="btn-enviar">Aceptar</button>
-          <button type="button" class="btn-enviar">Denegar</button>
-        </div>
-      </div>
+                <div class="botones-decision">
+                    <button type="button" class="btn-enviar">Aceptar</button>
+                    <button type="button" class="btn-enviar">Denegar</button>
+                </div>
+            </div>
 
-    </form>
-  </div>
+        </form>
+    </div>
 </main>
 
 <script src="js/revision.js"></script>

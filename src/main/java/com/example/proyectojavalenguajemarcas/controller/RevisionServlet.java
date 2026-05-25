@@ -67,16 +67,16 @@ public class RevisionServlet extends HttpServlet {
 
         try {
             int idJuego = Integer.parseInt(req.getParameter("id"));
-            String estado = req.getParameter("estado"); // Recibimos la orden de JavaScript
+            String estado = req.getParameter("estado");
 
             if ("RECHAZADO".equals(estado)) {
-                // Denegar no necesita leer fotos
+
                 boolean exito = juegoDAO.actualizarEstadoJuego(idJuego, "RECHAZADO");
                 jsonRespuesta.addProperty("exito", exito);
                 jsonRespuesta.addProperty("mensaje", exito ? "Juego rechazado." : "Error al rechazar.");
 
             } else if ("PUBLICADO".equals(estado)) {
-                // Aceptar procesa la imagen
+
                 Part archivoPart = req.getPart("caratula");
                 if (archivoPart != null && archivoPart.getSize() > 0) {
                     InputStream inputStream = archivoPart.getInputStream();

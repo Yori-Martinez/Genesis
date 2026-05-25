@@ -15,9 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.req-admin').forEach(el => el.style.display = 'block');
     }
 
-    // =========================================================================
-    // GESTIÓN DEL MENÚ DESPLEGABLE DE USUARIO (CLICK IZQUIERDO)
-    // =========================================================================
+
     const userSlot = document.querySelector('.user-slot');
     const userAvatar = document.querySelector('.user-avatar');
 
@@ -25,14 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
         userSlot.style.position = 'relative';
         userSlot.style.cursor = 'pointer';
 
-        // 1. Intentamos cargar el avatar dinámico de la base de datos
+
         if (userAvatar) {
             userAvatar.style.backgroundImage = "url('api/avatar')";
             userAvatar.style.backgroundSize = "cover";
             userAvatar.style.backgroundPosition = "center";
         }
 
-        // 2. Creamos la caja del menú desplegable estructurada con estilos limpios
+
         const dropdownMenu = document.createElement('div');
         dropdownMenu.style.cssText = `
             position: absolute;
@@ -49,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             overflow: hidden;
         `;
 
-        // Elemento: Cambiar Foto
+
         const btnCambiarFoto = document.createElement('div');
         btnCambiarFoto.textContent = 'Cambiar Foto';
         btnCambiarFoto.style.cssText = `
@@ -63,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnCambiarFoto.addEventListener('mouseover', () => btnCambiarFoto.style.backgroundColor = '#8F1952');
         btnCambiarFoto.addEventListener('mouseout', () => btnCambiarFoto.style.backgroundColor = 'transparent');
 
-        // Elemento: Cerrar Sesión
+
         const btnLogout = document.createElement('div');
         btnLogout.textContent = 'Cerrar Sesión';
         btnLogout.style.cssText = `
@@ -78,39 +76,39 @@ document.addEventListener('DOMContentLoaded', () => {
         btnLogout.addEventListener('mouseover', () => btnLogout.style.backgroundColor = '#8F1952');
         btnLogout.addEventListener('mouseout', () => btnLogout.style.backgroundColor = 'transparent');
 
-        // Input de tipo archivo oculto para gestionar la ventana del sistema operativo
+
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = 'image/png, image/jpeg';
         fileInput.style.display = 'none';
 
-        // Armamos el árbol de nodos del DOM
+
         dropdownMenu.appendChild(btnCambiarFoto);
         dropdownMenu.appendChild(btnLogout);
         userSlot.appendChild(dropdownMenu);
         userSlot.appendChild(fileInput);
 
-        // EVENTO 1: Alternar apertura y cierre al hacer click izquierdo en el slot de usuario
+
         userSlot.addEventListener('click', (e) => {
             if (dropdownMenu.contains(e.target) || e.target === fileInput) return;
             dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'flex' : 'none';
         });
 
-        // EVENTO 2: Cerrar el menú si el usuario hace click fuera del componente
+
         document.addEventListener('click', (e) => {
             if (!userSlot.contains(e.target)) {
                 dropdownMenu.style.display = 'none';
             }
         });
 
-        // EVENTO 3: Ejecutar la llamada al selector de archivos al pulsar "Cambiar Foto"
+
         btnCambiarFoto.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evitamos que se cierre el menú antes de tiempo
+            e.stopPropagation();
             dropdownMenu.style.display = 'none';
             fileInput.click();
         });
 
-        // EVENTO 4: Procesar el envío binario Multipart de la imagen seleccionada
+
         fileInput.addEventListener('change', () => {
             if (fileInput.files.length === 0) return;
 
@@ -125,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(datos => {
                     if (datos.exito) {
                         alert(datos.mensaje);
-                        // Forzamos al elemento HTML a recargar la foto añadiendo un parámetro de tiempo para destruir la caché
+
                         if (userAvatar) {
                             userAvatar.style.backgroundImage = `url('api/avatar?t=${new Date().getTime()}')`;
                         }
@@ -136,10 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(e => console.error("Error en la subida del avatar:", e));
         });
 
-        // EVENTO 5: Lógica de destrucción de la sesión
+
         btnLogout.addEventListener('click', (e) => {
             e.stopPropagation();
-            fetch('api/logout', { method: 'POST' })
+            fetch('api/logout', {method: 'POST'})
                 .then(() => {
                     sessionStorage.clear();
                     window.location.href = 'index.html';

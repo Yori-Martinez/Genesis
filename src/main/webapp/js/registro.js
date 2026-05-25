@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             fetch('api/registro', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: user, email: email, password: pass })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: user, email: email, password: pass})
             })
                 .then(r => r.json())
                 .then(datos => {

@@ -1,7 +1,3 @@
-/* ============================================================
-   1. RESET BÁSICO Y CONFIGURACIÓN GLOBAL
-   ============================================================ */
-/*@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap');*/
 
 * {
     box-sizing: border-box;
@@ -17,9 +13,7 @@
     flex-direction: column;
 }
 
-/* ============================================================
-   2. CABECERA (EXACTAMENTE 70px / MISMO QUE TIENDA)
-   ============================================================ */
+
 .header {
     background: linear-gradient(60.5deg, #37105B 35.73%, #4B2272 61.77%, #8F1952 95.26%);
     height: 7.5vh;
@@ -33,7 +27,7 @@
 .logo {
     color: #FFFFFF;
     font-weight: 900;
-    font-size: 3.2rem; /* 64px */
+    font-size: 3.2rem;
     letter-spacing: -0.03em;
 }
 
@@ -45,7 +39,7 @@
 
 .link {
     color: rgba(255, 255, 255, 0.6);
-    font-size: 1.5rem; /* 28px */
+    font-size: 1.5rem;
     font-family: 'Kokoro', sans-serif;
     text-decoration: none;
     text-transform: capitalize;
@@ -60,25 +54,23 @@
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: 1.0625rem; /* 17px */
+    gap: 1.0625rem;
 }
 
 .user-name {
     color: #FFFFFF;
-    font-size: 1.75rem; /* 28px */
+    font-size: 1.75rem;
     text-transform: capitalize;
 }
 
 .user-avatar {
-    width: 3.375rem; /* 54px */
-    height: 3.4375rem; /* 55px */
+    width: 3.375rem;
+    height: 3.4375rem;
     background-color: #8F1952;
     border-radius: 50%;
 }
 
-/* ============================================================
-   3. TARJETA PRINCIPAL (1300px x 650px)
-   ============================================================ */
+
 .main {
     flex-grow: 1;
     display: flex;
@@ -91,33 +83,31 @@
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
     conic-gradient(from 232.33deg at 62.87% 50%, #37105C 0deg, #631557 72deg, #751655 144deg, #4D125A 216deg, #501359 288deg, #4D125A 360deg);
 
-    width: 65rem; /* Exactamente 1300px */
-    height: 32.5rem; /* Exactamente 650px */
+    width: 65rem;
+    height: 32.5rem;
     border-radius: 0;
 
-    /* Centramos el contenido dentro de la tarjeta */
+
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* ============================================================
-   4. ESTRUCTURA DEL FORMULARIO
-   ============================================================ */
+
 .form-compacto {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    /* Padding interior para separar los campos de los bordes de la tarjeta */
-    padding: 0 3.5rem; /* 100px por los lados */
+
+    padding: 0 3.5rem;
 }
 
-/* --- COLUMNA IZQUIERDA (560px) --- */
+
 .col-izq {
-    width: 35rem; /* Exactamente 560px */
+    width: 35rem;
     display: flex;
     flex-direction: column;
-    gap: 3rem; /* 60px de separación */
+    gap: 3rem;
 }
 
 .input-grupo {
@@ -128,42 +118,42 @@
 
 .input-grupo label {
     color: #FFFFFF;
-    font-size: 1.5rem; /* 28px */
+    font-size: 1.5rem;
     text-transform: capitalize;
 }
 
-/* Inputs de texto (560x48) */
+
 .input-oscuro {
     background-color: #8F1952;
     color: #FFFFFF;
     border: none;
     width: 80%;
-    height: 3.5rem; /* 48px */
+    height: 3.5rem;
     padding: 0 1.25rem;
     font-size: 1.2rem;
     outline: none;
 }
 
-/* Textarea (560x206) */
+
 .textarea-oscuro {
     background-color: #8F1952;
     color: #FFFFFF;
     border: none;
-    width: 80%; /* 560px */
-    height: 10rem; /* Exactamente 206px */
+    width: 80%;
+    height: 10rem;
     padding: 1rem 1.25rem;
     font-size: 1.2rem;
     outline: none;
     resize: none;
 }
 
-/* --- COLUMNA DERECHA (290px) --- */
+
 .col-der {
-    width: 18.125rem; /* Exactamente 290px */
+    width: 18.125rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Empuja el botón "Enviar" hacia abajo */
-    align-items: flex-end; /* Pega todo a la derecha */
+    justify-content: space-between;
+    align-items: flex-end;
 }
 
 .grupo-archivo {
@@ -177,7 +167,7 @@
 
 .grupo-archivo label:first-child {
     color: #FFFFFF;
-    font-size: 1.5rem; /* 28px */
+    font-size: 1.5rem;
     text-transform: capitalize;
 }
 
@@ -185,10 +175,10 @@
     display: none;
 }
 
-/* Botón de Archivo (290px x 60px) */
+
 .btn-archivo {
-    width: 15rem; /* 290px */
-    height: 3.2rem; /* 60px */
+    width: 15rem;
+    height: 3.2rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -206,10 +196,10 @@
     transform: translateY(-0.125rem);
 }
 
-/* Botón de Enviar (254px x 84px) */
+
 .btn-enviar {
-    width: 9rem; /* 254px */
-    height: 3.2rem; /* 84px */
+    width: 9rem;
+    height: 3.2rem;
     color: #FFFFFF;
     font-size: 1.8rem;
     border: none;
@@ -229,15 +219,13 @@
     box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.7);
 }
 
-/* ============================================================
-   5. BOTONES DE DECISIÓN (EXCLUSIVO PARA LA VISTA ADMIN)
-   ============================================================ */
+
 .botones-decision {
     display: flex;
-    gap: 1.5rem; /* Separación horizontal entre los dos botones */
+    gap: 1.5rem;
 }
 
-/* Evitamos que el cursor cambie a "escribir" cuando el admin pasa el ratón sobre los campos bloqueados */
+
 .input-oscuro[readonly],
 .textarea-oscuro[readonly] {
     cursor: default;

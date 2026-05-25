@@ -16,7 +16,7 @@ import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 
-// 🚨 ANOTACIÓN CLAVE: Permite al Servlet desempaquetar archivos físicos de la petición HTTP
+
 @MultipartConfig
 @WebServlet("/api/editor")
 public class EditorServlet extends HttpServlet {
@@ -30,7 +30,7 @@ public class EditorServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         JsonObject jsonRespuesta = new JsonObject();
 
-        // 1. VERIFICACIÓN DE SESIÓN
+
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("usuarioLogueado") == null) {
             jsonRespuesta.addProperty("exito", false);
@@ -39,7 +39,7 @@ public class EditorServlet extends HttpServlet {
             return;
         }
 
-        // 2. VERIFICACIÓN DE ROL (Solo el EDITOR puede subir juegos)
+
         Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuarioLogueado.getRol().equals("JUGADOR")) {
             jsonRespuesta.addProperty("exito", false);
@@ -49,14 +49,14 @@ public class EditorServlet extends HttpServlet {
         }
 
         try {
-            // 3. LECTURA MULTIPART: Como no es JSON, usamos getParameter() para los textos
+
             String titulo = req.getParameter("titulo");
             String descripcion = req.getParameter("descripcion");
 
-            // Extraemos la pieza binaria que contiene el archivo ZIP
+
             Part zipPart = req.getPart("zip");
 
-            // Comprobación de seguridad en el backend por si fallase el frontend
+
             if (zipPart == null || zipPart.getSize() == 0) {
                 jsonRespuesta.addProperty("exito", false);
                 jsonRespuesta.addProperty("mensaje", "El archivo ZIP es obligatorio.");
@@ -64,14 +64,13 @@ public class EditorServlet extends HttpServlet {
                 return;
             }
 
-            // 4. PERSISTENCIA EN BASE DE DATOS
-            // Convertimos el archivo ZIP a un flujo de bytes continuo (InputStream)
+
             InputStream zipStream = zipPart.getInputStream();
 
-            // Llamamos al NUEVO método del DAO que inyecta el InputStream en la columna LONGBLOB
+
             boolean guardado = juegoDAO.insertarJuegoConZip(titulo, descripcion, usuarioLogueado.getId(), zipStream);
 
-            // 5. RESPUESTA AL CLIENTE
+
             if (guardado) {
                 jsonRespuesta.addProperty("exito", true);
                 jsonRespuesta.addProperty("mensaje", "Juego y ZIP subidos con éxito. Pendiente de revisión.");

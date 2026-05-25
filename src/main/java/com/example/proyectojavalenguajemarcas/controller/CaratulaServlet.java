@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
@@ -26,7 +27,7 @@ public class CaratulaServlet extends HttpServlet {
                 if (rs.next()) {
                     byte[] imagenBytes = rs.getBytes("caratula_contenido");
                     if (imagenBytes != null) {
-                        // Forzamos al navegador a interpretar los bytes como una imagen PNG/JPG
+
                         resp.setContentType("image/png");
                         resp.setContentLength(imagenBytes.length);
                         try (OutputStream os = resp.getOutputStream()) {

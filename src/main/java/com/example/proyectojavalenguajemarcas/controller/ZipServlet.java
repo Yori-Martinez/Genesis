@@ -35,15 +35,15 @@ public class ZipServlet extends HttpServlet {
                     String titulo = rs.getString("titulo");
 
                     if (zipBytes != null) {
-                        // Le decimos al navegador que esto es un archivo descargable
+
                         resp.setContentType("application/zip");
                         resp.setContentLength(zipBytes.length);
 
-                        // Limpiamos el título para que no dé errores en Windows y se descargue como "MiJuego.zip"
+
                         String nombreArchivo = titulo.replaceAll("[^a-zA-Z0-9.-]", "_") + ".zip";
                         resp.setHeader("Content-Disposition", "attachment; filename=\"" + nombreArchivo + "\"");
 
-                        // Transmitimos los bytes
+
                         try (OutputStream os = resp.getOutputStream()) {
                             os.write(zipBytes);
                             os.flush();
@@ -55,7 +55,7 @@ public class ZipServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Si no hay zip, devolvemos error 404
+
         resp.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 }

@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-document.getElementById('caratulaFile').addEventListener('change', function() {
+document.getElementById('caratulaFile').addEventListener('change', function () {
     const archivo = this.files[0];
     document.getElementById('nombreArchivoSel').textContent = archivo ? archivo.name : "Ningún archivo seleccionado";
 });
@@ -24,7 +24,7 @@ function obtenerDetalleJuego(id) {
                 document.getElementById('titulo').value = juego.titulo;
                 document.getElementById('descripcion').value = juego.descripcion;
 
-                // Conectamos el botón para descargar el ZIP directamente de MySQL
+
                 const btnDescarga = document.querySelector('.btn-archivo');
                 if (btnDescarga) {
                     btnDescarga.href = juego.archivoZipUrl;
@@ -51,7 +51,7 @@ function configurarBotonesDecision(id) {
         });
 
         btnDenegar.addEventListener('click', () => {
-            // Mandamos estado RECHAZADO, no hace falta foto
+
             enviarDecisionForm(id, 'RECHAZADO', null);
         });
     }
@@ -60,7 +60,7 @@ function configurarBotonesDecision(id) {
 function enviarDecisionForm(id, estado, archivoImagen) {
     const paqueteDatos = new FormData();
     paqueteDatos.append("id", id);
-    paqueteDatos.append("estado", estado); // 'PUBLICADO' o 'RECHAZADO'
+    paqueteDatos.append("estado", estado);
 
     if (archivoImagen) {
         paqueteDatos.append("caratula", archivoImagen);

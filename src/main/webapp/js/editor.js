@@ -2,9 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formSubirJuego = document.getElementById('formSubirJuego');
     const inputZip = document.getElementById('zip');
 
-    // =========================================================
-    // LÓGICA DE SUBIDA (Sin modificación visual del botón)
-    // =========================================================
+
     if (formSubirJuego) {
         formSubirJuego.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -12,13 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const titulo = document.getElementById('titulo').value.trim();
             const descripcion = document.getElementById('descripcion').value.trim();
 
-            // Validación de seguridad
+
             if (inputZip.files.length === 0 || !inputZip.files[0].name.toLowerCase().endsWith('.zip')) {
                 alert("Operación denegada: Es obligatorio adjuntar un archivo con extensión .zip.");
                 return;
             }
 
-            // Empaquetado binario Multipart
+
             const formData = new FormData();
             formData.append('titulo', titulo);
             formData.append('descripcion', descripcion);
@@ -35,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(datos => {
                     if (datos.exito) {
                         alert(datos.mensaje);
-                        formSubirJuego.reset(); // Limpiamos el formulario tras el éxito
+                        formSubirJuego.reset();
                     } else {
                         alert("Error: " + datos.mensaje);
                     }

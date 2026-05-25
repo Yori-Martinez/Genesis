@@ -12,9 +12,9 @@ function cargarBiblioteca() {
         })
         .then(juegos => {
             juegosGlobal = juegos;
-            renderizarGridBiblioteca(juegos); // Ahora buscará "grid-juegos"
+            renderizarGridBiblioteca(juegos);
             renderizarSidebar(juegos);
-            configurarBuscador();             // Ahora buscará "input-buscador"
+            configurarBuscador();
         })
         .catch(error => {
             console.error("Error al cargar biblioteca:", error);
@@ -22,14 +22,14 @@ function cargarBiblioteca() {
         });
 }
 
-// Función auxiliar para gestionar la visibilidad del mensaje central vs la cuadrícula
+
 function mostrarMensajeCentral(mensajeHtml) {
     const grid = document.getElementById('grid-juegos');
     const msjContainer = document.getElementById('mensaje-vacio-grid');
 
-    if (grid) grid.style.display = 'none'; // Ocultamos la cuadrícula
+    if (grid) grid.style.display = 'none';
     if (msjContainer) {
-        msjContainer.style.display = 'block'; // Mostramos el mensaje
+        msjContainer.style.display = 'block';
         msjContainer.innerHTML = `<h2>${mensajeHtml}</h2>`;
     }
 }
@@ -41,15 +41,15 @@ function renderizarGridBiblioteca(juegos) {
     if (!grid) return;
 
     if (juegos.length === 0) {
-        // Si no hay juegos, apagamos el grid y encendemos el texto gigante
+
         mostrarMensajeCentral("Agrega algún juego a tu biblioteca para viciar 🎮");
         return;
     }
 
-    // Si HAY juegos: Ocultamos el mensaje gigante y encendemos el grid de tarjetas
+
     if (msjContainer) msjContainer.style.display = 'none';
     grid.style.display = 'grid';
-    grid.innerHTML = ''; // Limpiamos cartas viejas
+    grid.innerHTML = '';
 
     juegos.forEach(juego => {
         const card = document.createElement('article');
@@ -77,7 +77,7 @@ function renderizarSidebar(juegos) {
         return;
     }
 
-    contenedorSidebar.innerHTML = ''; // Vaciamos para rellenar
+    contenedorSidebar.innerHTML = '';
     juegos.forEach(juego => {
         const item = document.createElement('div');
         item.className = 'item-juego';
@@ -91,7 +91,7 @@ function renderizarSidebar(juegos) {
 }
 
 function configurarBuscador() {
-    // Usamos exactamente la clase que le pusiste en tu HTML
+
     const inputBuscador = document.querySelector('.input-buscador');
     if (!inputBuscador) return;
 
@@ -103,7 +103,7 @@ function configurarBuscador() {
             (juego.descripcion && juego.descripcion.toLowerCase().includes(textoBusqueda))
         );
 
-        // Al escribir, actualiza al instante tanto las gamecards gigantes como el menú izquierdo
+
         renderizarGridBiblioteca(juegosFiltrados);
         renderizarSidebar(juegosFiltrados);
     });

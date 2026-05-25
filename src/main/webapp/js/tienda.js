@@ -10,11 +10,11 @@ function cargarTienda() {
         .then(juegos => {
             if (!juegos || juegos.length === 0) return;
 
-            // 1. HERO BANNER: El más nuevo se mantiene fijo arriba
+
             const juegoMasNuevo = juegos[0];
             actualizarHeroBanner(juegoMasNuevo);
 
-            // 2. SECCIÓN DESTACADOS: El resto se distribuyen abajo
+
             let restoJuegos = juegos.slice(1);
             restoJuegos = gestionarBarajado(restoJuegos);
             renderizarGridDestacados(restoJuegos);
@@ -64,33 +64,39 @@ function renderizarGridDestacados(juegos) {
 
     grid.innerHTML = '';
 
-    // Dividimos la lista para cumplir con tu diseño de 3 columnas (2, 2, 1)
+
     const colIzq = juegos.slice(0, 2);
     const colCen = juegos.slice(2, 4);
     const colDer = juegos.slice(4, 5);
 
     let htmlFinal = '';
 
-    // Columna Izquierda (Pequeñas apiladas)
+
     htmlFinal += `<div class="col-pequenas">`;
-    colIzq.forEach(j => { htmlFinal += generarHTMLTarjeta(j, 'card-p', 'overlay-p', 'btn-p'); });
+    colIzq.forEach(j => {
+        htmlFinal += generarHTMLTarjeta(j, 'card-p', 'overlay-p', 'btn-p');
+    });
     htmlFinal += `</div>`;
 
-    // Columna Centro (Pequeñas apiladas)
+
     htmlFinal += `<div class="col-pequenas">`;
-    colCen.forEach(j => { htmlFinal += generarHTMLTarjeta(j, 'card-p', 'overlay-p', 'btn-p'); });
+    colCen.forEach(j => {
+        htmlFinal += generarHTMLTarjeta(j, 'card-p', 'overlay-p', 'btn-p');
+    });
     htmlFinal += `</div>`;
 
-    // Columna Derecha (Tarjeta vertical gigante)
+
     htmlFinal += `<div class="col-grande">`;
-    colDer.forEach(j => { htmlFinal += generarHTMLTarjeta(j, 'card-g', 'overlay-g', 'btn-g'); });
+    colDer.forEach(j => {
+        htmlFinal += generarHTMLTarjeta(j, 'card-g', 'overlay-g', 'btn-g');
+    });
     htmlFinal += `</div>`;
 
     grid.innerHTML = htmlFinal;
 }
 
 function generarHTMLTarjeta(juego, claseCard, claseOverlay, claseBtn) {
-    // Eliminamos el precio e inyectamos título arriba y botón abajo de forma independiente
+
     return `
         <article class="card ${claseCard}" style="background-image: url('${juego.caratulaUrl}');">
             <div class="overlay ${claseOverlay}">
@@ -107,8 +113,8 @@ function generarHTMLTarjeta(juego, claseCard, claseOverlay, claseBtn) {
 function anadirAlCarrito(idJuego) {
     fetch('api/biblioteca', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id_juego: idJuego })
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id_juego: idJuego})
     })
         .then(r => r.json())
         .then(datos => {

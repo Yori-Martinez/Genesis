@@ -9,15 +9,15 @@ import java.util.List;
 
 public class JuegoDAO {
 
-    // Extraemos la creación del objeto a un método privado para no repetir código
+
     private Juego mapearJuego(ResultSet rs) throws Exception {
         return new Juego(
                 rs.getInt("id"),
                 rs.getString("titulo"),
                 rs.getString("descripcion"),
                 rs.getDouble("precio"),
-                "api/caratula?id=" + rs.getInt("id"), // Generamos la URL de la imagen sobre la marcha
-                "api/zip?id=" + rs.getInt("id"),      // Generamos la URL de descarga sobre la marcha
+                "api/caratula?id=" + rs.getInt("id"),
+                "api/zip?id=" + rs.getInt("id"),
                 rs.getString("estado"),
                 rs.getInt("id_editor"),
                 rs.getTimestamp("fecha_subida")
@@ -31,7 +31,9 @@ public class JuegoDAO {
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) lista.add(mapearJuego(rs));
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return lista;
     }
 
@@ -44,7 +46,9 @@ public class JuegoDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) lista.add(mapearJuego(rs));
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return lista;
     }
 
@@ -55,7 +59,9 @@ public class JuegoDAO {
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) lista.add(mapearJuego(rs));
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return lista;
     }
 
@@ -67,11 +73,13 @@ public class JuegoDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return mapearJuego(rs);
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
-    // NUEVO: Guardamos el título, la descripción y los bytes reales del ZIP en la BD
+
     public boolean insertarJuegoConZip(String titulo, String descripcion, int idEditor, InputStream zipStream) {
         String sql = "INSERT INTO juegos (titulo, descripcion, estado, id_editor, zip_contenido) VALUES (?, ?, 'PENDIENTE', ?, ?)";
         try (Connection con = ConexionBD.getConnection();
@@ -100,7 +108,7 @@ public class JuegoDAO {
         }
     }
 
-    // NUEVO: Método para procesar el rechazo del juego
+
     public boolean actualizarEstadoJuego(int idJuego, String estado) {
         String sql = "UPDATE juegos SET estado = ? WHERE id = ?";
         try (Connection con = ConexionBD.getConnection();
@@ -121,7 +129,10 @@ public class JuegoDAO {
             ps.setInt(1, idJuego);
             ps.setInt(2, idEditor);
             return ps.executeUpdate() > 0;
-        } catch (Exception e) { e.printStackTrace(); return false; }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean agregarABiblioteca(int idUsuario, int idJuego) {
@@ -131,7 +142,10 @@ public class JuegoDAO {
             ps.setInt(1, idUsuario);
             ps.setInt(2, idJuego);
             return ps.executeUpdate() > 0;
-        } catch (Exception e) { e.printStackTrace(); return false; }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public List<Juego> obtenerJuegosBiblioteca(int idUsuario) {
@@ -143,7 +157,9 @@ public class JuegoDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) lista.add(mapearJuego(rs));
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return lista;
     }
 }

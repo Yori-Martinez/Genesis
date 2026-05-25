@@ -1,25 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
     const formLogin = document.getElementById('formLogin');
 
-    if(formLogin) {
+    if (formLogin) {
         formLogin.addEventListener('submit', (e) => {
             e.preventDefault();
 
             const user = document.getElementById('username').value.trim();
             const pass = document.getElementById('password').value.trim();
 
-            
+
             fetch('api/login', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: user, password: pass })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: user, password: pass})
             })
-                
+
                 .then(respuesta => {
                     if (!respuesta.ok) {
                         throw new Error('Error en la respuesta del servidor');
                     }
-                    return respuesta.json(); 
+                    return respuesta.json();
                 })
                 .then(datos => {
                     if (datos.exito) {

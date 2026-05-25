@@ -1,36 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel Editor - Mis Publicaciones</title>
-  <link rel="stylesheet" href="css/revision.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Editor - Mis Publicaciones</title>
+    <link rel="stylesheet" href="css/revision.css">
 </head>
 <body class="body-revision">
 
 <header class="header">
-  <h1 class="logo">icono</h1>
-  <nav class="nav" id="menu-principal">
-    <a href="tienda.html" class="link">Tienda</a>
-    <a href="biblioteca.html" class="link">Biblioteca</a>
-    <a href="editor.html" class="link req-editor" style="display: none;">Subir Juego</a>
-    <a href="mis_publicaciones.html" class="link active req-editor" style="display: none;">Mis Publicaciones</a>
-    <a href="lista_revision.html" class="link req-admin" style="display: none;">Revision</a>
-  </nav>
-  <div class="user-slot">
-    <span id="username" class="user-name">Invitado</span>
-    <div class="user-avatar"></div>
-  </div>
+    <h1 class="logo">icono</h1>
+    <nav class="nav" id="menu-principal">
+        <a href="tienda.html" class="link">Tienda</a>
+        <a href="biblioteca.html" class="link">Biblioteca</a>
+        <a href="editor.html" class="link req-editor" style="display: none;">Subir Juego</a>
+        <a href="mis_publicaciones.html" class="link active req-editor" style="display: none;">Mis Publicaciones</a>
+        <a href="lista_revision.html" class="link req-admin" style="display: none;">Revision</a>
+    </nav>
+    <div class="user-slot">
+        <span id="username" class="user-name">Invitado</span>
+        <div class="user-avatar"></div>
+    </div>
 </header>
 
 <main class="main">
-  <div class="tarjeta-admin">
-    <div class="lista-juegos" id="lista-mis-publicaciones">
-      <div id="mensaje-vacio-publicaciones" style="padding: 3rem 0; width: 100%; text-align: center;">
-        <h3 style="color: rgba(255,255,255,0.4); font-size: 1.5rem; font-weight: normal;">Aún no has subido ningún juego.</h3>
-      </div>
+    <div class="tarjeta-admin">
+        <div class="lista-juegos" id="lista-mis-publicaciones">
+            <div id="mensaje-vacio-publicaciones" style="padding: 3rem 0; width: 100%; text-align: center;">
+                <h3 style="color: rgba(255,255,255,0.4); font-size: 1.5rem; font-weight: normal;">Aún no has subido
+                    ningún juego.</h3>
+            </div>
+        </div>
     </div>
-  </div>
 </main>
 
 <script src="js/auth.js"></script>

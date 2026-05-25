@@ -20,14 +20,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-// Habilitamos el procesamiento de datos multipart para recibir la foto de perfil (Límite: 5MB)
+
 @MultipartConfig(maxFileSize = 1024 * 1024 * 5)
 @WebServlet("/api/avatar")
 public class AvatarServlet extends HttpServlet {
 
-    // =========================================================================
-    // MÉTODO GET: Recupera los bytes de MySQL y los transmite a la cabecera
-    // =========================================================================
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
@@ -47,7 +45,7 @@ public class AvatarServlet extends HttpServlet {
                 if (rs.next()) {
                     byte[] imagenBytes = rs.getBytes("avatar_contenido");
                     if (imagenBytes != null && imagenBytes.length > 0) {
-                        // Forzamos al navegador a interpretar los datos binarios como imagen
+
                         resp.setContentType("image/png");
                         resp.setContentLength(imagenBytes.length);
                         try (OutputStream os = resp.getOutputStream()) {
@@ -61,13 +59,11 @@ public class AvatarServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Si el usuario no tiene foto aún, devolvemos un código 404 controlado para usar el fondo por defecto del CSS
+
         resp.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 
-    // =========================================================================
-    // MÉTODO POST: Actualiza la foto del usuario actual de forma persistente
-    // =========================================================================
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
