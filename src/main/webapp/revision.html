@@ -44,17 +44,13 @@
                     <a href="#" class="btn-archivo" style="text-decoration: none;">Descargar Archivos</a>
                 </div>
 
-                <div class="campo-formulario">
-                    <label>Carátula Oficial del Videojuego:</label>
+                <div class="grupo-archivo">
+                    <label>Carátula Videojuego</label>
+                    <label for="caratulaFile" class="btn-archivo" style="cursor: pointer; text-align: center;">Seleccionar Carátula</label>
                     <input type="file" id="caratulaFile" accept="image/jpeg, image/png" style="display: none;">
-                    <button type="button" class="btn-interactivo btn-secundario"
-                            onclick="document.getElementById('caratulaFile').click()">
-                        Examinar Equipo...
-                    </button>
-                    <span id="nombreArchivoSel"
-                          style="color: rgba(255,255,255,0.5); margin-left: 10px; font-size: 1.1rem;">
-            Ningún archivo seleccionado
-          </span>
+                    <span id="nombreArchivoSel" style="color: rgba(255,255,255,0.5); font-size: 1.1rem; text-align: center;">
+                        Ningún archivo seleccionado
+                    </span>
                 </div>
 
                 <div class="botones-decision">

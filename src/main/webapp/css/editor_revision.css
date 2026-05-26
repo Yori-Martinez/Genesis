@@ -230,3 +230,51 @@
 .textarea-oscuro[readonly] {
     cursor: default;
 }
+
+@media (max-width: 1200px) {
+    .nav { margin-left: 2rem; gap: 1.5rem; }
+}
+
+@media (max-width: 768px) {
+    html, body { overflow-x: hidden; max-width: 100vw; }
+
+    .header { padding: 0.8rem 1rem; flex-wrap: nowrap; justify-content: space-between; height: 7.5vh; min-height: 60px; position: sticky; top: 0; z-index: 1000; }
+    .logo { font-size: 1.8rem; flex-shrink: 0; }
+    .user-name { display: none; }
+    .user-avatar { width: 2.2rem; height: 2.2rem; flex-shrink: 0; }
+    .user-slot { margin-left: 0; flex-shrink: 0; }
+    .nav { margin: 0 1rem; flex-grow: 1; gap: 1.5rem; overflow-x: auto; white-space: nowrap; padding-top: 0; justify-content: flex-start; align-items: center; scrollbar-width: none; -ms-overflow-style: none; display: flex; }
+    .nav::-webkit-scrollbar { display: none; }
+    .link { font-size: 1.1rem; }
+
+    .main { padding: 1rem; height: auto; min-height: calc(100vh - 80px); width: 100%; box-sizing: border-box; }
+    .tarjeta { width: 100%; max-width: 100%; padding: 1.5rem 1rem; margin: 0; box-sizing: border-box; }
+
+    .form-compacto { flex-direction: column; gap: 1.5rem; width: 100%; }
+    .col-izq, .col-der { width: 100%; max-width: 100%; border: none; padding: 0; margin: 0; display: flex; flex-direction: column; }
+
+    .col-izq { gap: 1.2rem; }
+    .input-oscuro, .textarea-oscuro { width: 100%; box-sizing: border-box; font-size: 1rem; border-radius: 8px; }
+    .input-oscuro { height: 3.2rem; }
+    .textarea-oscuro { height: 7rem; }
+
+    .col-der { border-top: 1px dashed rgba(143, 25, 82, 0.5); padding-top: 1.5rem; gap: 1.2rem; }
+
+    .grupo-archivo { width: 100%; align-items: flex-start; gap: 0.8rem; margin: 0; }
+    .grupo-archivo label:first-child { font-size: 1.2rem; text-align: left; width: 100%; }
+
+    .btn-archivo, .btn-enviar {
+        width: 100%;
+        max-width: 100%;
+        height: 3.5rem;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+        border-radius: 10px;
+    }
+
+    .tabla-contenedor { overflow-x: auto; display: block; width: 100%; border-radius: 8px; }
+    .tabla-juegos { white-space: nowrap; font-size: 0.9rem; }
+}

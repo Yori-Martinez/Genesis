@@ -268,3 +268,39 @@
     font-size: 1.5rem;
     border-radius: 12px;
 }
+
+@media (max-width: 1200px) {
+    .nav { margin-left: 2rem; gap: 1.5rem; }
+    .grid-destacados { grid-template-columns: 1fr 1fr; }
+    .col-grande { grid-column: span 2; }
+    .card-g { aspect-ratio: 21 / 9; }
+}
+
+@media (max-width: 768px) {
+    html, body { overflow-x: hidden; max-width: 100vw; }
+
+    .header { padding: 0.8rem 1rem; flex-wrap: nowrap; justify-content: space-between; height: 7.5vh; min-height: 60px; position: sticky; top: 0; z-index: 1000; }
+    .logo { font-size: 1.8rem; flex-shrink: 0; }
+    .user-name { display: none; }
+    .user-avatar { width: 2.2rem; height: 2.2rem; flex-shrink: 0; }
+    .user-slot { margin-left: 0; flex-shrink: 0; }
+    .nav { margin: 0 1rem; flex-grow: 1; gap: 1.5rem; overflow-x: auto; white-space: nowrap; padding-top: 0; justify-content: flex-start; align-items: center; scrollbar-width: none; -ms-overflow-style: none; display: flex; }
+    .nav::-webkit-scrollbar { display: none; }
+    .link { font-size: 1.1rem; }
+
+    .hero { aspect-ratio: 4 / 3; }
+    .overlay-hero { padding-left: 20px; align-items: flex-start; }
+    #hero-titulo { font-size: 2.2rem; }
+    #hero-desc { display: none; }
+    .btn-hero { width: auto; padding: 0 1.5rem; height: 3rem; right: 20px; bottom: 20px; left: auto; font-size: 1.2rem; }
+
+    .descubrir { padding: 0 20px 40px 20px; }
+    .titulo-destacados { font-size: 2.2rem; text-align: center; }
+    .grid-destacados { grid-template-columns: 1fr; gap: 20px; }
+    .col-pequenas { gap: 20px; }
+    .col-grande { grid-column: span 1; }
+    .card-g { aspect-ratio: 16 / 9; }
+    .titulo-juego-card { font-size: 1.5rem; }
+    .desc-juego-card { font-size: 0.9rem; -webkit-line-clamp: 2; }
+    .btn-p, .btn-g { width: 110px; height: 35px; font-size: 1rem; }
+}

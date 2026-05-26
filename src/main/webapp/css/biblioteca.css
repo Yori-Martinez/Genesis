@@ -346,3 +346,40 @@
 .btn-jugar:hover {
     transform: scale(1.05);
 }
+
+@media (max-width: 1200px) {
+    .nav { margin-left: 2rem; gap: 1.5rem; }
+    .grid-biblioteca { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 992px) {
+    .grid-biblioteca { grid-template-columns: repeat(3, 1fr); }
+    .sidebar-biblioteca { width: 14rem; }
+}
+
+@media (max-width: 768px) {
+    html, body { overflow-x: hidden; max-width: 100vw; }
+
+    .header { padding: 0.8rem 1rem; flex-wrap: nowrap; justify-content: space-between; height: 7.5vh; min-height: 60px; position: sticky; top: 0; z-index: 1000; }
+    .logo { font-size: 1.8rem; flex-shrink: 0; }
+    .user-name { display: none; }
+    .user-avatar { width: 2.2rem; height: 2.2rem; flex-shrink: 0; }
+    .user-slot { margin-left: 0; flex-shrink: 0; }
+    .nav { margin: 0 1rem; flex-grow: 1; gap: 1.5rem; overflow-x: auto; white-space: nowrap; padding-top: 0; justify-content: flex-start; align-items: center; scrollbar-width: none; -ms-overflow-style: none; display: flex; }
+    .nav::-webkit-scrollbar { display: none; }
+    .link { font-size: 1.1rem; }
+
+    .layout-biblioteca { flex-direction: column; height: auto; overflow: visible; }
+    .main-biblioteca { overflow-y: visible; padding: 1.5rem 1rem; }
+    .sidebar-biblioteca { display: none; }
+
+    .buscador-container { flex-direction: column; max-width: 100%; }
+    .grid-biblioteca { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .card-biblioteca { max-width: 160px; margin: 0 auto; }
+    .btn-jugar { font-size: 0.9rem; height: 35px; width: 85%; }
+    .mensaje-vacio-grid p { font-size: 1.3rem; }
+}
+
+@media (max-width: 380px) {
+    .card-biblioteca { max-width: 140px; }
+}
