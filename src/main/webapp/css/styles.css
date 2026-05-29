@@ -212,11 +212,88 @@
 
 @media (max-width: 768px) {
     html, body { overflow-x: hidden; max-width: 100vw; }
+    
+    .solo-movil {
+        display: flex !important;
+    }
+    .oculto-movil {
+        display: none !important;
+    }
 
-    body { padding: 1rem; }
-    .container { flex-direction: column; justify-content: center; height: auto; min-height: 100vh; gap: 2rem; width: 100%; }
-    .login-box, .register-box { width: 100%; max-width: 100%; padding: 2rem 1.5rem; margin: 0 auto; box-sizing: border-box; }
-    h2 { font-size: 1.8rem; }
-    .input-group input { font-size: 1rem; padding: 0.8rem 1rem; }
-    .submit-btn { font-size: 1.1rem; padding: 0.8rem; }
+    body { padding: 0; }
+    
+    .contenedor-pantalla { 
+        padding: 1rem; 
+        align-items: flex-start;
+        padding-top: 2rem;
+        height: auto;
+        min-height: 90vh;
+    }
+    
+    .tarjeta-login { 
+        width: 100%; 
+        max-width: 100%; 
+        height: auto; 
+        min-height: auto;
+        padding: 2.5rem 1.5rem; 
+        display: flex;
+        flex-direction: column;
+    }
+
+    .separador-vertical { display: none; }
+
+    .login-izquierda {
+        padding: 0;
+        width: 100%;
+        margin-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .login-izquierda form {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .input-grupo { margin-bottom: 1.5rem; }
+    .input-grupo label { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    
+    .input-oscuro { 
+        max-width: 100%; 
+        height: 2.8rem; 
+        font-size: 1rem; 
+        border-radius: 4px; 
+    }
+
+    .btn-interactivo {
+        height: 3rem;
+        font-size: 1.1rem;
+        width: 10rem;
+        border-radius: 8px;
+    }
+
+    .login-izquierda .btn-interactivo, 
+    #formLogin .btn-interactivo {
+        align-self: flex-start;
+        margin-top: 0.5rem;
+    }
+
+    .login-derecha {
+        padding: 0;
+        width: 100%;
+        align-items: flex-start; 
+        gap: 1.5rem;
+    }
+
+    .texto-promocional {
+        font-size: 1.2rem;
+        text-align: left;
+        max-width: 100%;
+        line-height: 1.4;
+    }
+
+    .login-derecha .btn-interactivo {
+        align-self: center;
+    }
 }
