@@ -8,7 +8,7 @@ El repositorio incluye `Dockerfile.vercel`, que Vercel detecta para ejecutar Jav
 
 1. Crea un clúster **TiDB Cloud Starter** en su modalidad gratuita, compatible con el protocolo MySQL. Mantén el límite de gasto en **0** y no actives modalidades de pago. Consulta los límites vigentes antes de crearlo. Puedes usar otra base MySQL si ya la tienes.
 2. Si vas a empezar sin datos, abre el SQL Editor del proveedor, selecciona la base elegida (por ejemplo `test`) y ejecuta el contenido de [`src/main/resources/schema.sql`](src/main/resources/schema.sql). Crea tablas vacías, sin usuarios ni contraseñas de ejemplo. Si vas a conservar tu base anterior, sigue primero la migración de [SEGURIDAD.md](SEGURIDAD.md); después exporta/importa los datos ya migrados, preservando IDs y relaciones. **No ejecutes el esquema vacío para sustituir datos existentes.**
-3. En Vercel, importa `sayko24/Genesis`, rama `main`, raíz del repositorio y framework **Other**. Deja la construcción del contenedor a Vercel. Añade las variables de conexión desde la sección **Connect** del clúster, sin subirlas a GitHub:
+3. En Vercel, importa `Yori-Martinez/Genesis`, rama `main`, raíz del repositorio y framework **Other**. Deja la construcción del contenedor a Vercel. Añade las variables de conexión desde la sección **Connect** del clúster, sin subirlas a GitHub:
 
    | Variable | Valor |
    |---|---|

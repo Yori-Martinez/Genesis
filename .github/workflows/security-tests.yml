@@ -49,6 +49,17 @@ jobs:
         run: bash ./mvnw -B -Pintegration verify
       - name: Build Vercel container
         run: docker build -f Dockerfile.vercel -t genesis-vercel-test .
+      - name: HTTP smoke test of the packaged Vercel container
+        run: |
+          trap 'docker rm -f genesis-vercel-smoke >/dev/null 2>&1 || true' EXIT
+          docker run -d --name genesis-vercel-smoke --network host \
+            -e APP_ENV -e MYSQLHOST -e MYSQLPORT -e MYSQLDATABASE \
+            -e MYSQLUSER -e MYSQLPASSWORD -e MYSQL_SSL_MODE genesis-vercel-test
+          curl --fail --retry 30 --retry-all-errors --retry-delay 1 \
+            -c target/container.cookies -D target/container.headers \
+            -H 'X-CSRF-Token: Fetch' http://127.0.0.1/api/sesion > target/container-session.json
+          python3 -c 'import json; d=json.load(open("target/container-session.json")); assert d == {"autenticado":False,"nombre":None,"rol":None}'
+          grep -qi 'X-CSRF-Token:' target/container.headers
       - name: Production session cookie
         env:
           APP_ENV: development
