@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let juegosGlobal = [];
 
 function cargarBiblioteca() {
-    fetch('api/biblioteca')
+    GenesisApi.request('api/biblioteca')
         .then(respuesta => {
             if (!respuesta.ok) throw new Error('Debes iniciar sesión para ver tu biblioteca.');
             return respuesta.json();
@@ -30,7 +30,9 @@ function mostrarMensajeCentral(mensajeHtml) {
     if (grid) grid.style.display = 'none';
     if (msjContainer) {
         msjContainer.style.display = 'block';
-        msjContainer.innerHTML = `<h2>${mensajeHtml}</h2>`;
+        const titulo = document.createElement('h2');
+        titulo.textContent = mensajeHtml;
+        msjContainer.replaceChildren(titulo);
     }
 }
 
@@ -56,11 +58,14 @@ function renderizarGridBiblioteca(juegos) {
         card.className = 'card-biblioteca';
         card.style.backgroundImage = `url('${juego.caratulaUrl}')`;
 
-        card.innerHTML = `
-            <div class="overlay-biblioteca">
-                <button class="btn-jugar" onclick="jugar('${juego.archivoZipUrl}')">JUGAR</button>
-            </div>
-        `;
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay-biblioteca';
+        const boton = document.createElement('button');
+        boton.className = 'btn-jugar';
+        boton.textContent = 'JUGAR';
+        boton.addEventListener('click', () => jugar(juego.archivoZipUrl));
+        overlay.appendChild(boton);
+        card.appendChild(overlay);
         grid.appendChild(card);
     });
 }
@@ -82,10 +87,15 @@ function renderizarSidebar(juegos) {
         const item = document.createElement('div');
         item.className = 'item-juego';
 
-        item.innerHTML = `
-            <img src="${juego.caratulaUrl}" alt="Carátula" class="icono-juego">
-            <span class="texto-juego" title="${juego.titulo}">${juego.titulo}</span>
-        `;
+        const imagen = document.createElement('img');
+        imagen.src = juego.caratulaUrl;
+        imagen.alt = 'Carátula';
+        imagen.className = 'icono-juego';
+        const titulo = document.createElement('span');
+        titulo.className = 'texto-juego';
+        titulo.title = juego.titulo;
+        titulo.textContent = juego.titulo;
+        item.append(imagen, titulo);
         contenedorSidebar.appendChild(item);
     });
 }

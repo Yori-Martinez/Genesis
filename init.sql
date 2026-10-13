@@ -5,7 +5,9 @@ CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    credencial_bloqueada BOOLEAN NOT NULL DEFAULT FALSE,
+    auth_version INT NOT NULL DEFAULT 0,
     rol ENUM('JUGADOR', 'EDITOR', 'ADMIN') DEFAULT 'JUGADOR',
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     avatar_contenido LONGBLOB
@@ -32,8 +34,3 @@ CREATE TABLE biblioteca (
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
     FOREIGN KEY (id_juego) REFERENCES juegos(id)
 );
-
-INSERT INTO usuarios (username, email, password, rol) VALUES
-    ('GabeNewell', 'papigave@tienda.com', '123456', 'ADMIN'),
-    ('ElDonJuan', 'editor@tienda.com', '1234', 'EDITOR'),
-    ('Elpepe67', 'jugador@tienda.com', '1234', 'JUGADOR');

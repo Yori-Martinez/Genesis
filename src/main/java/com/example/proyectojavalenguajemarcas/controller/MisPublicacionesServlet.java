@@ -4,6 +4,7 @@ import com.example.proyectojavalenguajemarcas.model.Juego;
 import com.example.proyectojavalenguajemarcas.model.JuegoDAO;
 import com.example.proyectojavalenguajemarcas.model.Usuario;
 import com.google.gson.Gson;
+import com.example.proyectojavalenguajemarcas.security.*;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -85,10 +86,10 @@ public class MisPublicacionesServlet extends HttpServlet {
 
             BufferedReader reader = req.getReader();
 
-            JsonObject jsonRecibido = gson.fromJson(reader, JsonObject.class);
+            JsonObject jsonRecibido = HttpJson.read(req);
 
 
-            int idJuego = jsonRecibido.get("id").getAsInt();
+            int idJuego = HttpJson.positiveId(jsonRecibido, "id");
 
 
             boolean borrado = juegoDAO.eliminarJuego(idJuego, usuario.getId());
@@ -102,6 +103,9 @@ public class MisPublicacionesServlet extends HttpServlet {
                 jsonRespuesta.addProperty("mensaje", "No se pudo eliminar el juego");
             }
 
+        } catch (IllegalArgumentException e) {
+            HttpJson.error(resp, 400, "Identificador no válido.");
+            return;
         } catch (Exception e) {
 
             e.printStackTrace();

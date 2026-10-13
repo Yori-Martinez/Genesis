@@ -1,6 +1,8 @@
 package com.example.proyectojavalenguajemarcas.controller;
 
 import com.example.proyectojavalenguajemarcas.model.ConexionBD;
+import com.example.proyectojavalenguajemarcas.model.Usuario;
+import com.example.proyectojavalenguajemarcas.security.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -23,11 +25,18 @@ public class ZipServlet extends HttpServlet {
             return;
         }
 
-        int id = Integer.parseInt(idParam);
+        int id;
+        try { id = HttpJson.positiveId(idParam); }
+        catch (IllegalArgumentException e) { HttpJson.error(resp, 400, "Identificador no válido."); return; }
         String sql = "SELECT zip_contenido, titulo FROM juegos WHERE id = ?";
 
         try (Connection con = ConexionBD.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
+            Usuario user = (Usuario) req.getAttribute("authenticatedUser");
+            if (!GameAccess.canDownload(con, user, id)) {
+                HttpJson.error(resp, 403, "No tienes permiso para acceder a este archivo.");
+                return;
+            }
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

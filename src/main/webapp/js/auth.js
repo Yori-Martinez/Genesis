@@ -1,6 +1,11 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const rolUsuario = sessionStorage.getItem('rol') || 'JUGADOR';
-    const nombreUsuario = sessionStorage.getItem('nombre') || 'Invitado';
+document.addEventListener('DOMContentLoaded', async () => {
+    let sesion;
+    try { sesion = await GenesisApi.session(); }
+    catch (error) { console.error(error); return; }
+    if (!sesion.autenticado) { window.location.href = 'index.html'; return; }
+    const rolUsuario = sesion.rol;
+    const nombreUsuario = sesion.nombre;
+    document.querySelectorAll('.req-editor, .req-admin').forEach(el => el.style.display = 'none');
 
     const usernameElement = document.getElementById('username');
     if (usernameElement) {
@@ -115,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
             formData.append('avatar', fileInput.files[0]);
 
-            fetch('api/avatar', {
+            GenesisApi.request('api/avatar', {
                 method: 'POST',
                 body: formData
             })
@@ -137,12 +142,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         btnLogout.addEventListener('click', (e) => {
             e.stopPropagation();
-            fetch('api/logout', {method: 'POST'})
+            GenesisApi.request('api/logout', {method: 'POST'})
                 .then(() => {
-                    sessionStorage.clear();
                     window.location.href = 'index.html';
                 })
-                .catch(e => console.error("Error cerrando sesión:", e));
+                .catch(e => alert(e.message));
         });
     }
 });

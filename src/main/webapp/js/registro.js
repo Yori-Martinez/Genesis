@@ -5,15 +5,19 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const user = document.getElementById('reg-usuario').value.trim();
             const email = document.getElementById('reg-email').value.trim();
-            const pass = document.getElementById('reg-password').value.trim();
-            const passConfirm = document.getElementById('reg-password-confirm').value.trim();
+            const pass = document.getElementById('reg-password').value;
+            const passConfirm = document.getElementById('reg-password-confirm').value;
 
+            if ([...pass].length < 15 || [...pass].length > 128) {
+                alert('La contraseña debe tener entre 15 y 128 caracteres.');
+                return;
+            }
             if (pass !== passConfirm) {
                 alert("Las contraseñas no coinciden");
                 return;
             }
 
-            fetch('api/registro', {
+            GenesisApi.request('api/registro', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({username: user, email: email, password: pass})
@@ -27,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         alert(datos.mensaje);
                     }
                 })
-                .catch(e => console.error(e));
+                .catch(e => alert(e.message));
         });
     }
 });

@@ -4,6 +4,7 @@ import com.example.proyectojavalenguajemarcas.model.Juego;
 import com.example.proyectojavalenguajemarcas.model.JuegoDAO;
 import com.example.proyectojavalenguajemarcas.model.Usuario;
 import com.google.gson.Gson;
+import com.example.proyectojavalenguajemarcas.security.*;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -56,8 +57,8 @@ public class BibliotecaServlet extends HttpServlet {
 
         try {
             BufferedReader reader = req.getReader();
-            JsonObject jsonRecibido = gson.fromJson(reader, JsonObject.class);
-            int idJuego = jsonRecibido.get("id_juego").getAsInt();
+            JsonObject jsonRecibido = HttpJson.read(req);
+            int idJuego = HttpJson.positiveId(jsonRecibido, "id_juego");
 
             boolean agregado = juegoDAO.agregarABiblioteca(usuario.getId(), idJuego);
 
@@ -66,8 +67,11 @@ public class BibliotecaServlet extends HttpServlet {
                 jsonRespuesta.addProperty("mensaje", "¡Añadido al carrito!");
             } else {
                 jsonRespuesta.addProperty("exito", false);
-                jsonRespuesta.addProperty("mensaje", "Ya lo tienes en tu maletero");
+                jsonRespuesta.addProperty("mensaje", "El juego no está publicado o ya está en tu biblioteca");
             }
+        } catch (IllegalArgumentException e) {
+            HttpJson.error(resp, 400, "Identificador no válido.");
+            return;
         } catch (Exception e) {
             jsonRespuesta.addProperty("exito", false);
         }

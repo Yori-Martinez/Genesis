@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('descripcion', descripcion);
             formData.append('zip', inputZip.files[0]);
 
-            fetch('api/editor', {
+            GenesisApi.request('api/editor', {
                 method: 'POST',
                 body: formData
             })
