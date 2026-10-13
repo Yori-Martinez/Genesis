@@ -19,7 +19,8 @@ public final class Passwords {
             return false;
         }
         try {
-            return Password.check(password, hash).withArgon2();
+            // Read the parameters from the stored hash; withArgon2() uses library defaults.
+            return Password.check(password, hash).with(Argon2Function.getInstanceFromHash(hash));
         } catch (IllegalArgumentException e) {
             return false;
         }
