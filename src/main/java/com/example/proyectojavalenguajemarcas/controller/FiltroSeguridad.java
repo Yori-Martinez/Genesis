@@ -14,6 +14,7 @@ public class FiltroSeguridad implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
+        req.setCharacterEncoding("UTF-8");
         resp.setHeader("X-Content-Type-Options", "nosniff");
         resp.setHeader("X-Frame-Options", "DENY");
         String path = req.getServletPath();

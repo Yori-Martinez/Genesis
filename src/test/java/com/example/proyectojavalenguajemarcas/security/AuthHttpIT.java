@@ -175,6 +175,13 @@ class AuthHttpIT {
         var missing = browser.send("/api/login","POST","{\"username\":\"missing\",\"password\":\"wrong\"}","application/json",true);
         var wrong = browser.send("/api/login","POST","{\"username\":\"player\",\"password\":\"wrong\"}","application/json",true);
         assertEquals(401,missing.statusCode()); assertEquals(missing.body(),wrong.body());
+        String unicodePassword = " Contraseña registrada segura 🔐 ";
+        var unicodeInput = new Gson().toJson(Map.of("username","jugador_ñ","email","unicode@example.com","password",unicodePassword));
+        assertEquals(201,browser.send("/api/registro","POST",unicodeInput,"application/json",true).statusCode());
+        var unicodeLogin = new Gson().toJson(Map.of("username","jugador_ñ","password",unicodePassword));
+        assertEquals(200,browser.send("/api/login","POST",unicodeLogin,"application/json",true).statusCode());
+        browser.bootstrap();
+        assertEquals("jugador_ñ",object(browser.get("/api/sesion")).get("nombre").getAsString());
     }
 
     @Test void appliesIndependentExactRateLimitsAndIgnoresForgedIpHeaders() throws Exception {
