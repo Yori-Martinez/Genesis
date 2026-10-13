@@ -25,6 +25,15 @@ El repositorio declara `framework: "container"` en `vercel.json` y usa `Dockerfi
 
 Si faltan la base o sus tablas, el backend rechaza la autenticación. Subir el código no ejecuta la migración ni configura automáticamente esos servicios.
 
+## Archivos principales
+
+- `src/main/resources/schema.sql`: única definición de las tablas, compartida por TiDB, Docker Compose, la herramienta interna y las pruebas. Se ejecuta en una base nueva ya seleccionada.
+- `Dockerfile.vercel`: única receta del contenedor. Para construirla localmente: `docker build -f Dockerfile.vercel -t genesis .`.
+- `vercel.json`: configura el despliegue Java con el preset Container.
+- `SEGURIDAD.md`: migración y gestión de credenciales de instalaciones anteriores.
+
+Los ajustes de IntelliJ (`.idea/`) son locales y se excluyen de Git. El wrapper de Maven se conserva para compilar sin instalar Maven por separado.
+
 ## Herramienta interna
 
 Necesitas Java 25 y las variables de conexión exportadas en tu terminal. No publiques las credenciales ni las escribas en los argumentos de los comandos.

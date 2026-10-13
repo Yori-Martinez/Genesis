@@ -32,7 +32,7 @@ java -cp 'target/classes:target/auth-libs/*' com.example.proyectojavalenguajemar
 
 Roles válidos: JUGADOR, EDITOR y ADMIN. El registro público crea siempre JUGADOR, aunque una petición incluya otro rol. La herramienta incrementa `auth_version` al renovar una contraseña o asignar un rol y revoca las sesiones anteriores. Una modificación directa del rol en SQL también exige volver a entrar al detectar una diferencia, pero debes usar la herramienta para garantizar la revocación incluso si cambias y restauras el rol entre peticiones.
 
-Para una base nueva, `AuthAdmin init` o `src/main/resources/schema.sql` crea el esquema sin cuentas predefinidas. `init.sql` sirve para MySQL local con permiso para crear una base. Registra tu cuenta como jugador y asígnale ADMIN con la herramienta interna.
+Para una base nueva, `AuthAdmin init` o `src/main/resources/schema.sql` crea el esquema sin cuentas predefinidas. Docker Compose y las pruebas usan ese mismo archivo. La migración reutiliza únicamente su sección de tablas de seguridad para conservar las tablas y datos existentes. Registra tu cuenta como jugador y asígnale ADMIN con la herramienta interna.
 
 ## Sesiones y permisos
 

@@ -9,6 +9,9 @@ class MigrationIT {
     @Test void migratesWithoutLosingRelationsAndCanResumeAndRenewPublishedAccounts() throws Exception {
         DatabaseFixture.seed();
         try (Connection con=DatabaseFixture.connection(); Statement st=con.createStatement()) {
+            st.executeUpdate("DROP TABLE GENESIS_SESSION_ATTRIBUTES");
+            st.executeUpdate("DROP TABLE GENESIS_SESSION");
+            st.executeUpdate("DROP TABLE genesis_rate_limits");
             st.executeUpdate("ALTER TABLE usuarios ADD COLUMN password VARCHAR(255)");
             st.executeUpdate("UPDATE usuarios SET password=' Test legacy password '");
             st.executeUpdate("ALTER TABLE usuarios DROP COLUMN password_hash");
@@ -21,6 +24,9 @@ class MigrationIT {
                 ps.setString(1,Passwords.hash(" Test legacy password ")); ps.executeUpdate();
             }
             AuthAdmin.migrate(con);
+            assertEquals("0", DatabaseFixture.scalar("SELECT COUNT(*) FROM GENESIS_SESSION"));
+            assertEquals("0", DatabaseFixture.scalar("SELECT COUNT(*) FROM GENESIS_SESSION_ATTRIBUTES"));
+            assertEquals("0", DatabaseFixture.scalar("SELECT COUNT(*) FROM genesis_rate_limits"));
             assertEquals("5", DatabaseFixture.scalar("SELECT COUNT(*) FROM usuarios"));
             assertEquals("3", DatabaseFixture.scalar("SELECT COUNT(*) FROM juegos"));
             assertEquals("1", DatabaseFixture.scalar("SELECT COUNT(*) FROM biblioteca WHERE id_usuario=1 AND id_juego=10"));

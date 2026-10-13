@@ -7,13 +7,14 @@ import java.sql.*;
 import java.util.*;
 
 public final class AuthAdmin {
+    private static final String SECURITY_SCHEMA_MARKER = "-- BEGIN SHARED SECURITY TABLES";
     private AuthAdmin() {}
 
     public static void main(String[] args) {
         try (Connection con = ConexionBD.getConnection()) {
             if (args.length == 1 && args[0].equals("init")) {
                 if (column(con, "id")) throw new IllegalArgumentException("La tabla usuarios ya existe. Usa migrate para conservar sus datos.");
-                executeSchema(con, "schema.sql");
+                executeSchema(con, false);
                 System.out.println("Esquema inicializado. Registra tu cuenta y asígnale ADMIN con set-role.");
             } else if (args.length == 1 && args[0].equals("migrate")) {
                 migrate(con);
@@ -46,10 +47,15 @@ public final class AuthAdmin {
         }
     }
 
-    private static void executeSchema(Connection con, String resource) throws SQLException {
-        try (var input = AuthAdmin.class.getClassLoader().getResourceAsStream(resource)) {
+    private static void executeSchema(Connection con, boolean securityOnly) throws SQLException {
+        try (var input = AuthAdmin.class.getClassLoader().getResourceAsStream("schema.sql")) {
             if (input == null) throw new SQLException("Esquema no disponible.");
             String sql = new String(input.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            if (securityOnly) {
+                int start = sql.indexOf(SECURITY_SCHEMA_MARKER);
+                if (start < 0) throw new SQLException("Falta la sección de seguridad en el esquema.");
+                sql = sql.substring(start + SECURITY_SCHEMA_MARKER.length());
+            }
             try (Statement st = con.createStatement()) {
                 for (String statement : sql.split(";")) if (!statement.isBlank()) st.executeUpdate(statement);
             }
@@ -108,7 +114,7 @@ public final class AuthAdmin {
                 }
                 st.executeUpdate("ALTER TABLE usuarios MODIFY password_hash VARCHAR(255) NOT NULL");
                 if (legacy) st.executeUpdate("ALTER TABLE usuarios DROP COLUMN password");
-                executeSchema(con, "runtime-schema.sql");
+                executeSchema(con, true);
             }
         } finally {
             try (Statement st = con.createStatement()) { st.executeQuery("SELECT RELEASE_LOCK('genesis_auth_migration')").close(); }

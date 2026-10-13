@@ -31,6 +31,8 @@ CREATE TABLE biblioteca (
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
     FOREIGN KEY (id_juego) REFERENCES juegos(id)
 );
+-- BEGIN SHARED SECURITY TABLES
+-- This section is reused by AuthAdmin migrate for existing installations.
 CREATE TABLE IF NOT EXISTS GENESIS_SESSION (
  PRIMARY_ID CHAR(36) NOT NULL PRIMARY KEY,
  SESSION_ID CHAR(36) NOT NULL,

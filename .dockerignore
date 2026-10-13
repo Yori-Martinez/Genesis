@@ -7,5 +7,4 @@ target
 tests
 .github
 node_modules
-/init.sql
 *.md

@@ -22,9 +22,9 @@ public final class DatabaseFixture {
             st.executeUpdate("DROP TABLE IF EXISTS biblioteca");
             st.executeUpdate("DROP TABLE IF EXISTS juegos");
             st.executeUpdate("DROP TABLE IF EXISTS usuarios");
-            String sql = Files.readString(Path.of("init.sql"));
+            String sql = Files.readString(Path.of("src/main/resources/schema.sql"));
             for (String statement : sql.split(";")) {
-                if (!statement.isBlank() && !statement.stripLeading().startsWith("CREATE DATABASE") && !statement.stripLeading().startsWith("USE ")) {
+                if (!statement.isBlank()) {
                     st.executeUpdate(statement);
                 }
             }
