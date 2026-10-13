@@ -4,11 +4,11 @@ Tienda de juegos creada con Java, Tomcat, MySQL y HTML/CSS/JavaScript. Autentica
 
 ## Vercel sin Railway
 
-El repositorio incluye `Dockerfile.vercel`, que Vercel detecta para ejecutar Java en su Container Runtime (actualmente beta y disponible en todos los planes). No necesitas convertir el backend a JavaScript. La base de datos se contrata/configura por separado: Vercel no aloja MySQL dentro de este contenedor.
+El repositorio declara `framework: "container"` en `vercel.json` y usa `Dockerfile.vercel` para ejecutar Java en su Container Runtime (actualmente beta y disponible en todos los planes). No necesitas convertir el backend a JavaScript. La base de datos se contrata/configura por separado: Vercel no aloja MySQL dentro de este contenedor.
 
 1. Crea un clúster **TiDB Cloud Starter** en su modalidad gratuita, compatible con el protocolo MySQL. Mantén el límite de gasto en **0** y no actives modalidades de pago. Consulta los límites vigentes antes de crearlo. Puedes usar otra base MySQL si ya la tienes.
 2. Si vas a empezar sin datos, abre el SQL Editor del proveedor, selecciona la base elegida (por ejemplo `test`) y ejecuta el contenido de [`src/main/resources/schema.sql`](src/main/resources/schema.sql). Crea tablas vacías, sin usuarios ni contraseñas de ejemplo. Si vas a conservar tu base anterior, sigue primero la migración de [SEGURIDAD.md](SEGURIDAD.md); después exporta/importa los datos ya migrados, preservando IDs y relaciones. **No ejecutes el esquema vacío para sustituir datos existentes.**
-3. En Vercel, importa `Yori-Martinez/Genesis`, rama `main`, raíz del repositorio y framework **Other**. Deja la construcción del contenedor a Vercel. Añade las variables de conexión desde la sección **Connect** del clúster, sin subirlas a GitHub:
+3. En Vercel, importa `Yori-Martinez/Genesis`, rama `main`, raíz del repositorio y **Application Preset: Container**. Deja los comandos de construcción y el directorio de salida sin personalizar. `vercel.json` fija el preset Container aunque el panel del proyecto hubiera quedado en Other. Añade las variables de conexión desde la sección **Connect** del clúster, sin subirlas a GitHub:
 
    | Variable | Valor |
    |---|---|
@@ -57,3 +57,7 @@ bash scripts/test-security.sh
 El último comando necesita Docker y ejecuta pruebas HTTP sobre Tomcat y MySQL de prueba. GitHub Actions comprueba también la construcción del contenedor. No utiliza la base real del proyecto.
 
 Documentación: [Container Runtime de Vercel](https://vercel.com/docs/functions/runtimes/container), [TiDB Starter y precios](https://www.pingcap.com/tidb-cloud-starter-pricing-details/), [integración TiDB](https://vercel.com/marketplace/tidb-cloud).
+
+## Si aparece 404 NOT_FOUND
+
+Comprueba que el despliegue corresponde al commit más reciente y que los Build Logs muestran la construcción de `Dockerfile.vercel` y Maven. Un estado Ready solo indica que terminó la publicación; una construcción vacía también puede terminar con ese estado. El preset debe ser Container: `framework: null` selecciona Other y puede impedir que se construya Java. No cambies la raíz a `src/main/webapp`, porque eso publicaría el HTML sin el backend.
