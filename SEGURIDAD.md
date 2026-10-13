@@ -1,78 +1,94 @@
 # Seguridad de Genesis
 
-Esta actualización mantiene Java, Tomcat 11, MySQL y el diseño existente. Las API verifican la identidad, el rol vigente y, cuando corresponde, la propiedad del recurso en el servidor.
+La seguridad de Genesis se concentra en el backend Java. La interfaz muestra los controles disponibles, mientras que el servidor verifica la identidad, el rol vigente y la propiedad de los recursos en cada petición protegida.
 
-## Antes de actualizar una instalación existente
+## Evolución de la autenticación
 
-1. Renueva la credencial de MySQL que estaba incluida en el código público. Retirarla del último commit no la elimina del historial.
-2. Configura las variables de `.env.example` en el proceso Java y en la herramienta interna. No se carga automáticamente un archivo .env. Producción requiere HTTPS y MySQL con TLS y certificado válido (`VERIFY_IDENTITY`). Para pruebas locales explícitamente usa `APP_ENV=development`.
-3. Detén la aplicación y guarda una copia de seguridad de la base de datos en una ubicación protegida. No publiques esa copia, porque el esquema anterior contiene contraseñas en claro.
-4. Compila y prepara las dependencias para la herramienta:
-   ```bash
-   bash ./mvnw verify
-   bash ./mvnw dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory=target/auth-libs
-   java -cp 'target/classes:target/auth-libs/*' com.example.proyectojavalenguajemarcas.tools.AuthAdmin migrate
-   ```
-5. La migración añade hashes Argon2id y campos de bloqueo/revocación; verifica las contraseñas antes de eliminar `password`. Conserva IDs, roles y relaciones. Es reanudable si se interrumpe; MySQL confirma los cambios de esquema por fases. No inicies el WAR antiguo después de migrar.
-6. Renueva las credenciales de ejemplo bloqueadas con `set-password` antes de utilizarlas. No tienen una contraseña nueva compartida o predefinida.
-7. Arranca el WAR actualizado y comprueba login, biblioteca y permisos. Los antiguos identificadores de sesión ya no son válidos.
+En la versión inicial, los controles visuales dependían del rol guardado en `sessionStorage`, las contraseñas se almacenaban en texto plano y algunas operaciones tenían comprobaciones incompletas. En particular, `POST /api/revision` permitía actuar a cualquier usuario con sesión, aunque no fuera administrador.
 
-La herramienta necesita permisos para alterar el esquema durante la migración. El usuario de base de datos usado por la aplicación debe tener únicamente los permisos de lectura/escritura necesarios; no necesita permisos para alterar tablas.
+Modificar el navegador o enviar una petición directamente podía sortear restricciones que solo existían en la interfaz. La actualización trasladó las decisiones de acceso a un filtro central en Java y añadió comprobaciones sobre los recursos concretos.
 
-Si la verificación de un hash existente falla, la herramienta se detiene y conserva la columna antigua. Corrige el dato o restaura la copia protegida, con la aplicación detenida; no añadas un modo de login que acepte texto plano.
+| Aspecto | Versión inicial | Implementación actual |
+|---|---|---|
+| Rol mostrado por la interfaz | Leído desde `sessionStorage`. | Consultado al servidor mediante `/api/sesion`. |
+| Autorización | Comprobaciones incompletas entre páginas y API. | Reglas explícitas por ruta y método, con denegación por defecto. |
+| Revisión de juegos | El POST admitía cualquier sesión autenticada. | Consulta y modificación reservadas a ADMIN. |
+| Contraseñas | Almacenadas en texto plano. | Hashes Argon2id con salt aleatorio. |
+| Sesiones | Gestionadas en la instancia del contenedor. | Persistidas y compartidas mediante Spring Session JDBC. |
+| Credenciales de conexión | Incluidas en el código. | Variables de entorno y TLS en producción. |
+| Textos aportados por usuarios | Algunos se insertaban como HTML. | Renderizados como texto mediante nodos DOM seguros. |
 
-## Gestión manual de cuentas
+La contraseña se almacena en `password_hash`. Argon2id utiliza 19 MiB de memoria, dos iteraciones, paralelismo uno y un salt aleatorio de 16 bytes. El login verifica únicamente hashes; el registro exige contraseñas de entre 15 y 128 caracteres y conserva los espacios introducidos.
 
-Ejecuta Java directamente en un terminal. `set-password` pide y confirma una contraseña oculta; no acepta contraseñas por argumentos, variables de entorno ni registros de salida.
+La herramienta de migración transforma las credenciales del esquema anterior, verifica los hashes guardados antes de eliminar la columna `password` y conserva identificadores, roles y relaciones. Las credenciales de ejemplo publicadas quedan bloqueadas hasta su renovación. La migración puede reanudarse y se detiene si un hash existente no corresponde a la contraseña anterior.
 
-```bash
-java -cp 'target/classes:target/auth-libs/*' com.example.proyectojavalenguajemarcas.tools.AuthAdmin set-password NOMBRE
-java -cp 'target/classes:target/auth-libs/*' com.example.proyectojavalenguajemarcas.tools.AuthAdmin set-role NOMBRE EDITOR
-```
-
-Roles válidos: JUGADOR, EDITOR y ADMIN. El registro público crea siempre JUGADOR, aunque una petición incluya otro rol. La herramienta incrementa `auth_version` al renovar una contraseña o asignar un rol y revoca las sesiones anteriores. Una modificación directa del rol en SQL también exige volver a entrar al detectar una diferencia, pero debes usar la herramienta para garantizar la revocación incluso si cambias y restauras el rol entre peticiones.
-
-Para una base nueva, `AuthAdmin init` o `src/main/resources/schema.sql` crea el esquema sin cuentas predefinidas. Docker Compose y las pruebas usan ese mismo archivo. La migración reutiliza únicamente su sección de tablas de seguridad para conservar las tablas y datos existentes. Registra tu cuenta como jugador y asígnale ADMIN con la herramienta interna.
+La eliminación de una credencial del código actual no la elimina del historial de Git. La renovación de credenciales de conexión expuestas es una operación independiente de la retirada del código. La aplicación requiere HTTPS y la conexión de producción a la base utiliza `VERIFY_IDENTITY` para verificar el certificado TLS.
 
 ## Sesiones y permisos
 
+La identidad procede de la sesión. El filtro consulta el rol y la versión de autenticación actuales en la base de datos; los parámetros del navegador no conceden permisos. El registro público crea siempre JUGADOR, aunque la petición intente seleccionar otro rol.
+
+Un cambio de rol detectado por el servidor exige volver a iniciar sesión. La versión `auth_version` permite revocar las sesiones tras cambios de credenciales o permisos, incluso si un rol se cambia y posteriormente se restaura.
+
 - Cookies HttpOnly, SameSite=Lax, Secure en producción y seguimiento exclusivamente por cookies.
 - Caducidad tras 30 minutos sin actividad y ocho horas desde el login. La sesión se renueva al entrar y se invalida al salir.
-- `GET /api/sesion` devuelve únicamente `autenticado`, `nombre` y `rol`. Con `X-CSRF-Token: Fetch`, Tomcat devuelve el nonce en la cabecera del mismo nombre. La interfaz lo mantiene en memoria y lo envía en las peticiones que modifican datos, incluidas login y registro. Después del login obtiene un nonce nuevo.
-- Las API privadas devuelven 401 sin sesión válida y 403 sin permisos. Las páginas privadas redirigen al login o a la tienda. Las rutas o métodos sin regla explícita se deniegan.
-- Solo ADMIN puede consultar o enviar revisiones. EDITOR y ADMIN pueden publicar y gestionar sus propias publicaciones.
-- ZIP: ADMIN, el editor propietario o un usuario con el juego PUBLICADO en su biblioteca. Un juego pendiente/rechazado no puede añadirse a la biblioteca.
-- Carátulas publicadas: visibles a usuarios autenticados para mostrar la tienda. Las carátulas privadas solo las ven ADMIN o el editor propietario.
-- Los títulos y descripciones se muestran como texto. No se interpreta HTML proporcionado por usuarios.
-- Se desactiva la caché de respuestas de sesión y recursos privados y se añade `nosniff`.
+- `GET /api/sesion` devuelve únicamente `autenticado`, `nombre` y `rol`, sin contraseñas ni identificadores de sesión.
+- Las API privadas devuelven 401 sin sesión válida y 403 sin permisos. Las páginas privadas redirigen al login o a la tienda.
+- Las rutas, roles o métodos sin una regla válida se deniegan.
 
-Las sesiones se guardan en MySQL mediante Spring Session JDBC; el nonce CSRF viaja en la misma sesión. Sobreviven a los reinicios y se comparten entre contenedores. Las tablas `GENESIS_SESSION` y `GENESIS_SESSION_ATTRIBUTES` son privadas: contienen identidad y tokens, y deben protegerse igual que los usuarios.
+| Recurso u operación | Permiso requerido |
+|---|---|
+| Tienda, biblioteca y avatar | Usuario autenticado. |
+| Subir juegos y consultar publicaciones propias | EDITOR o ADMIN. |
+| Eliminar una publicación | EDITOR o ADMIN, únicamente si es propietario. |
+| Consultar, aprobar o rechazar revisiones | ADMIN. |
+| Añadir un juego a la biblioteca | Usuario autenticado y juego PUBLICADO. |
+| Descargar un ZIP | ADMIN, editor propietario o usuario con el juego PUBLICADO en su biblioteca. |
+| Consultar una carátula publicada | Usuario autenticado. |
+| Consultar una carátula pendiente o rechazada | ADMIN o editor propietario. |
 
-El filtro SQL limita el login a 20 peticiones y el registro a cinco por IP y minuto, con contadores independientes y compartidos entre contenedores. La consulta de sesión admite 120 por minuto para limitar la creación de sesiones anónimas. Las actualizaciones se realizan dentro de una transacción para evitar que peticiones simultáneas evadan el límite. En Vercel (`VERCEL=1`) usa la IP de `X-Forwarded-For`, que su entrada reemplaza; fuera de Vercel usa la IP de conexión. No definas `VERCEL=1` en otro proxy sin validar esa garantía. Las peticiones a esos endpoints limpian sesiones caducadas y contadores antiguos. Si la base no responde, la autenticación se rechaza con 503.
+Las sesiones se guardan en las tablas `GENESIS_SESSION` y `GENESIS_SESSION_ATTRIBUTES` mediante Spring Session JDBC. El token CSRF se conserva en la misma sesión, por lo que la sesión y el token sobreviven a los reinicios y se comparten entre contenedores.
+
+## Protección de peticiones y contenido
+
+El filtro `RestCsrfPreventionFilter` de Tomcat protege las operaciones que modifican datos, incluidos login y registro. La consulta de sesión con `X-CSRF-Token: Fetch` devuelve un token en la cabecera del mismo nombre. La interfaz lo mantiene en memoria y lo envía en las peticiones de escritura; después del login obtiene uno nuevo.
+
+Un filtro SQL aplica límites de 20 peticiones de login, cinco de registro y 120 consultas de sesión por IP y minuto. Los contadores son independientes para cada endpoint y se comparten entre instancias. Las actualizaciones transaccionales impiden que peticiones simultáneas evadan el límite. El exceso devuelve 429; los fallos de conexión durante esas comprobaciones devuelven 503.
+
+Las peticiones a esos endpoints eliminan sesiones caducadas y contadores antiguos. La obtención de la IP distingue la entrada de la plataforma de las conexiones directas; las cabeceras de IP proporcionadas por clientes no se consideran fiables de forma general.
+
+Los títulos, descripciones y mensajes aportados por usuarios se muestran mediante `textContent` o nodos DOM seguros. La validación de entradas rechaza identificadores y cuerpos malformados, y los errores de login no revelan si una cuenta existe. Las respuestas de sesión y recursos privados desactivan la caché y añaden `nosniff`.
 
 ## Pruebas
 
-Java 25 o posterior, Node.js 20 o posterior y Docker disponible:
+La verificación utiliza Java 25 o posterior, Node.js 22 o posterior y Docker para los recorridos que requieren base de datos.
 
 ```bash
 bash scripts/test-security.sh
 ```
 
-El script crea un MySQL desechable con contraseña aleatoria, publicado solo en localhost, ejecuta JUnit, pruebas HTTP con Tomcat real y las pruebas JavaScript y retira el contenedor al terminar. Nunca utiliza tu base de datos de producción. Las pruebas SQL rechazan bases cuyo nombre no termine en `_test` o un entorno distinto de `development`.
+El script crea un MySQL desechable con contraseña aleatoria, publicado solo en localhost. Ejecuta JUnit, pruebas HTTP con Tomcat y pruebas JavaScript; el contenedor se retira al terminar. Las pruebas SQL rechazan bases cuyo nombre no termine en `_test` o un entorno distinto de `development`.
 
-También puedes usar un MySQL de prueba que tú hayas creado, con las variables MYSQL configuradas y `APP_ENV=development`, y ejecutar `bash ./mvnw -Pintegration verify`.
+El perfil Maven `integration` también permite ejecutar las pruebas contra una base MySQL de prueba configurada mediante variables de entorno:
 
-Pruebas que no requieren MySQL/Docker:
+```bash
+bash ./mvnw -Pintegration verify
+```
+
+Pruebas que no requieren MySQL ni Docker:
 
 ```bash
 bash ./mvnw test
 node --test tests/ui.test.cjs
 ```
 
-Las pruebas DOM usan un doble que rechaza la interpretación de HTML dinámico; no sustituyen una revisión visual en un navegador. El script comprueba los mismos recorridos con las API reales, pero no usa cuentas ni datos reales.
+Las comprobaciones cubren:
 
-## Vercel
+- Denegación de acceso a usuarios anónimos y roles sin permisos, incluidas las revisiones enviadas directamente a la API.
+- Propiedad de publicaciones, visibilidad de carátulas y acceso a descargas.
+- Renovación, caducidad y revocación de sesiones; persistencia tras reemplazar el contenedor.
+- Rechazo de peticiones sin token CSRF y límites compartidos frente a solicitudes simultáneas.
+- Migración de contraseñas, bloqueo de credenciales públicas y conservación de cuentas y relaciones.
+- Renderizado de contenido malicioso como texto y recorridos habituales de jugador, editor y administrador.
 
-Consulta [README.md](README.md) para conectar una base compatible con MySQL y desplegar el contenedor. No hay credenciales incluidas ni migraciones automáticas al arrancar. La migración de una base real se ejecuta por separado, con una copia protegida y la aplicación antigua detenida. Las pruebas automatizadas usan MySQL desechable; no certifican los datos reales ni la compatibilidad completa de otro proveedor.
-
-Vercel limita los cuerpos de peticiones/respuestas a 4,5 MB. Se admiten archivos de hasta 3 MiB y formularios de hasta 4 MiB. Los ZIP antiguos mayores de 4 MiB no pueden descargarse a través de ese runtime: conservan sus datos, pero la API devuelve 413. Para juegos mayores se necesitaría almacenamiento de objetos, una ampliación que queda fuera de este cambio. El diseño y los recorridos existentes se mantienen.
+GitHub Actions ejecuta estas comprobaciones y valida la construcción y la respuesta HTTP del contenedor. Las pruebas DOM utilizan un doble que rechaza HTML dinámico; no sustituyen una revisión visual en un navegador. La verificación automatizada usa cuentas y datos de prueba y no valida por sí sola los datos de una instalación real.
