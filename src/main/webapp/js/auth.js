@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userSlot = document.querySelector('.user-slot');
     const userAvatar = document.querySelector('.user-avatar');
 
-    if (userSlot && nombreUsuario !== 'Invitado') {
+    if (userSlot) {
         userSlot.style.position = 'relative';
         userSlot.style.cursor = 'pointer';
 

@@ -2,7 +2,7 @@ name: Security tests
 
 on:
   push:
-    branches: [main, codex/auth-security]
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -47,6 +47,10 @@ jobs:
           node-version: "22"
       - name: JUnit, migration and real HTTP integration
         run: bash ./mvnw -B -Pintegration verify
+      - name: Production session cookie
+        env:
+          APP_ENV: production
+        run: bash ./mvnw -B -Pintegration -Dit.test=ProductionCookieIT verify
       - name: JavaScript security regression tests
         run: node --test tests/ui.test.cjs
       - uses: actions/upload-artifact@v4

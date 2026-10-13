@@ -19,4 +19,5 @@ export MYSQLDATABASE=genesis_auth_test MYSQL_SSL_MODE=DISABLED
 MYSQLPORT="$(docker port "$test_container" 3306/tcp | sed 's/.*://')"
 export MYSQLPORT
 bash ./mvnw -Pintegration verify
+APP_ENV=production bash ./mvnw -Pintegration -Dit.test=ProductionCookieIT verify
 node --test tests/ui.test.cjs

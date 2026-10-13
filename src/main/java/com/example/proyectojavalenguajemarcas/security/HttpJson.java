@@ -5,7 +5,7 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 
 public final class HttpJson {
-    private static final Gson GSON = new Gson();
+    private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private HttpJson() {}
 
     public static JsonObject read(HttpServletRequest req) throws IOException {

@@ -76,9 +76,10 @@ public final class AuthAdmin {
                     }
                 }
             }
-            try (Statement st = con.createStatement(); ResultSet rows = st.executeQuery("SELECT password_hash FROM usuarios")) {
+            try (Statement st = con.createStatement(); ResultSet rows = st.executeQuery(legacy ? "SELECT password, password_hash FROM usuarios" : "SELECT password_hash FROM usuarios")) {
                 while (rows.next()) {
-                    String hash = rows.getString(1);
+                    String hash = rows.getString("password_hash");
+                    if (legacy && !Passwords.verify(rows.getString("password"), hash)) throw new SQLException("La credencial guardada no supera la verificación.");
                     if (hash == null || !hash.startsWith("$argon2id$")) throw new SQLException("Quedan credenciales sin migrar.");
                 }
             }

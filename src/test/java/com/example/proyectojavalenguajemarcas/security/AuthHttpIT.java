@@ -189,4 +189,49 @@ class AuthHttpIT {
         for (int i=0; i<5; i++) assertEquals(400,browser.send("/api/registro","POST","{}","application/json",true).statusCode());
         assertEquals(429,browser.send("/api/registro","POST","{}","application/json",true).statusCode());
     }
+
+    @Test void preservesEditorAdministratorAndPlayerHappyPaths() throws Exception {
+        Browser editor = new Browser(); editor.login("editor");
+        java.io.ByteArrayOutputStream bytes = new java.io.ByteArrayOutputStream();
+        try (java.util.zip.ZipOutputStream zip = new java.util.zip.ZipOutputStream(bytes)) {
+            zip.putNextEntry(new java.util.zip.ZipEntry("index.html"));
+            zip.write("<p>Demo game</p>".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            zip.closeEntry();
+        }
+        assertTrue(object(multipart(editor,"/api/editor",Map.of("titulo","Demo title","descripcion","Demo description"),
+                "zip","demo.zip","application/zip",bytes.toByteArray())).get("exito").getAsBoolean());
+        int game = Integer.parseInt(DatabaseFixture.scalar("SELECT id FROM juegos WHERE titulo='Demo title'"));
+        assertEquals("PENDIENTE",DatabaseFixture.scalar("SELECT estado FROM juegos WHERE id="+game));
+        assertTrue(editor.get("/api/mispublicaciones").body().contains("Demo title"));
+        Browser admin = new Browser(); admin.login("admin");
+        byte[] png = Base64.getDecoder().decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aY3sAAAAASUVORK5CYII=");
+        assertTrue(object(multipart(admin,"/api/revision",Map.of("id",String.valueOf(game),"estado","PUBLICADO"),
+                "caratula","cover.png","image/png",png)).get("exito").getAsBoolean());
+        Browser player = new Browser(); player.login("player");
+        assertTrue(player.get("/api/tienda").body().contains("Demo title"));
+        assertEquals(200,player.get("/api/caratula?id="+game).statusCode());
+        assertTrue(object(player.send("/api/biblioteca","POST","{\"id_juego\":"+game+"}","application/json",true)).get("exito").getAsBoolean());
+        assertTrue(player.get("/api/biblioteca").body().contains("Demo title"));
+        assertEquals(200,player.get("/api/zip?id="+game).statusCode());
+        assertTrue(object(multipart(player,"/api/avatar",Map.of(),"avatar","avatar.png","image/png",png)).get("exito").getAsBoolean());
+        assertEquals(200,player.get("/api/avatar").statusCode());
+        assertEquals("1",DatabaseFixture.scalar("SELECT COUNT(*) FROM usuarios WHERE id=1 AND avatar_contenido IS NOT NULL"));
+    }
+
+    private HttpResponse<String> multipart(Browser browser,String path,Map<String,String> fields,
+            String field,String filename,String type,byte[] file) throws Exception {
+        String boundary = "genesis-test-boundary";
+        java.io.ByteArrayOutputStream bytes = new java.io.ByteArrayOutputStream();
+        for (var entry : fields.entrySet()) {
+            bytes.write(("--"+boundary+"\r\nContent-Disposition: form-data; name=\""+entry.getKey()+"\"\r\n\r\n"+entry.getValue()+"\r\n")
+                    .getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        }
+        bytes.write(("--"+boundary+"\r\nContent-Disposition: form-data; name=\""+field+"\"; filename=\""+filename+"\"\r\nContent-Type: "+type+"\r\n\r\n")
+                .getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        bytes.write(file);
+        bytes.write(("\r\n--"+boundary+"--\r\n").getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        return browser.client.send(HttpRequest.newBuilder(URI.create(origin+path))
+                .header("Content-Type","multipart/form-data; boundary="+boundary).header("X-CSRF-Token",browser.csrf)
+                .POST(HttpRequest.BodyPublishers.ofByteArray(bytes.toByteArray())).build(),HttpResponse.BodyHandlers.ofString());
+    }
 }
