@@ -1,60 +1,50 @@
 package com.example.proyectojavalenguajemarcas.controller;
 
-import com.example.proyectojavalenguajemarcas.model.Usuario;
+import com.example.proyectojavalenguajemarcas.model.*;
+import com.example.proyectojavalenguajemarcas.security.*;
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
+import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.sql.SQLException;
 
-
-@WebFilter(urlPatterns = {"/editor.html", "/mis_publicaciones.html", "/revision.html", "/lista_revision.html", "/biblioteca.html", "/tienda.html"})
 public class FiltroSeguridad implements Filter {
-
+    private final UsuarioDAO dao = new UsuarioDAO();
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
-
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-
-
-        HttpSession session = req.getSession(false);
-
-
-        String path = req.getRequestURI();
-
-
-        boolean logueado = (session != null && session.getAttribute("usuarioLogueado") != null);
-
-
-        if (!logueado) {
-            resp.sendRedirect("index.html");
+        req.setCharacterEncoding("UTF-8");
+        resp.setHeader("X-Content-Type-Options", "nosniff");
+        resp.setHeader("X-Frame-Options", "DENY");
+        String path = req.getServletPath();
+        AccessPolicy.Access access = AccessPolicy.required(path, req.getMethod());
+        if (access == AccessPolicy.Access.DENY) {
+            HttpJson.error(resp, 403, "Acceso denegado.");
             return;
         }
-
-
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-        String rol = usuario.getRol();
-
-
-        if ((path.endsWith("editor.html") || path.endsWith("mis_publicaciones.html")) && rol.equals("JUGADOR")) {
-
-            resp.sendRedirect("tienda.html");
-            return;
+        if (path.startsWith("/api/") || access != AccessPolicy.Access.PUBLIC) {
+            resp.setHeader("Cache-Control", "no-store");
+            Usuario user;
+            try {
+                user = Sessions.resolve(req.getSession(false), dao);
+            } catch (SQLException e) {
+                HttpJson.error(resp, 503, "Servicio temporalmente no disponible.");
+                return;
+            }
+            req.setAttribute("authenticatedUser", user);
+            if (access != AccessPolicy.Access.PUBLIC && user == null) {
+                Sessions.clearCookie(req, resp);
+                if (!path.startsWith("/api/")) resp.sendRedirect(req.getContextPath() + "/index.html");
+                else HttpJson.error(resp, 401, "Debes iniciar sesión.");
+                return;
+            }
+            if (access != AccessPolicy.Access.PUBLIC && !AccessPolicy.permits(access, user.getRol())) {
+                if (!path.startsWith("/api/")) resp.sendRedirect(req.getContextPath() + "/tienda.html");
+                else HttpJson.error(resp, 403, "Permisos insuficientes.");
+                return;
+            }
         }
-
-
-        if ((path.endsWith("revision.html") || path.endsWith("lista_revision.html")) && !rol.equals("ADMIN")) {
-
-            resp.sendRedirect("tienda.html");
-            return;
-        }
-
-
         chain.doFilter(request, response);
     }
 }

@@ -14,7 +14,7 @@ document.getElementById('caratulaFile').addEventListener('change', function () {
 });
 
 function obtenerDetalleJuego(id) {
-    fetch(`api/revision?id=${id}`)
+    GenesisApi.request(`api/revision?id=${id}`)
         .then(respuesta => {
             if (!respuesta.ok) throw new Error('Error al obtener detalles');
             return respuesta.json();
@@ -66,7 +66,7 @@ function enviarDecisionForm(id, estado, archivoImagen) {
         paqueteDatos.append("caratula", archivoImagen);
     }
 
-    fetch('api/revision', {
+    GenesisApi.request('api/revision', {
         method: 'POST',
         body: paqueteDatos
     })

@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let juegosGlobal = [];
 
 function cargarTienda() {
-    fetch('api/tienda')
+    GenesisApi.request('api/tienda')
         .then(respuesta => respuesta.json())
         .then(juegos => {
             if (!juegos || juegos.length === 0) return;
@@ -69,49 +69,45 @@ function renderizarGridDestacados(juegos) {
     const colCen = juegos.slice(2, 4);
     const colDer = juegos.slice(4, 5);
 
-    let htmlFinal = '';
-
-
-    htmlFinal += `<div class="col-pequenas">`;
-    colIzq.forEach(j => {
-        htmlFinal += generarHTMLTarjeta(j, 'card-p', 'overlay-p', 'btn-p');
+    const grupos = [
+        [colIzq, 'col-pequenas', 'card-p', 'overlay-p', 'btn-p'],
+        [colCen, 'col-pequenas', 'card-p', 'overlay-p', 'btn-p'],
+        [colDer, 'col-grande', 'card-g', 'overlay-g', 'btn-g']
+    ];
+    grupos.forEach(([juegos, columna, card, overlay, boton]) => {
+        const contenedor = document.createElement('div');
+        contenedor.className = columna;
+        juegos.forEach(juego => contenedor.appendChild(generarTarjeta(juego, card, overlay, boton)));
+        grid.appendChild(contenedor);
     });
-    htmlFinal += `</div>`;
-
-
-    htmlFinal += `<div class="col-pequenas">`;
-    colCen.forEach(j => {
-        htmlFinal += generarHTMLTarjeta(j, 'card-p', 'overlay-p', 'btn-p');
-    });
-    htmlFinal += `</div>`;
-
-
-    htmlFinal += `<div class="col-grande">`;
-    colDer.forEach(j => {
-        htmlFinal += generarHTMLTarjeta(j, 'card-g', 'overlay-g', 'btn-g');
-    });
-    htmlFinal += `</div>`;
-
-    grid.innerHTML = htmlFinal;
 }
 
-function generarHTMLTarjeta(juego, claseCard, claseOverlay, claseBtn) {
-
-    return `
-        <article class="card ${claseCard}" style="background-image: url('${juego.caratulaUrl}');">
-            <div class="overlay ${claseOverlay}">
-                <div class="bloque-superior-card">
-                    <h3 class="titulo-juego-card">${juego.titulo}</h3>
-                    <p class="desc-juego-card">${juego.descripcion || ''}</p>
-                </div>
-                <button class="btn ${claseBtn}" onclick="anadirAlCarrito(${juego.id})">Al Carrito</button>
-            </div>
-        </article>
-    `;
+function generarTarjeta(juego, claseCard, claseOverlay, claseBtn) {
+    const card = document.createElement('article');
+    card.className = 'card ' + claseCard;
+    card.style.backgroundImage = `url('${juego.caratulaUrl}')`;
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay ' + claseOverlay;
+    const superior = document.createElement('div');
+    superior.className = 'bloque-superior-card';
+    const titulo = document.createElement('h3');
+    titulo.className = 'titulo-juego-card';
+    titulo.textContent = juego.titulo;
+    const descripcion = document.createElement('p');
+    descripcion.className = 'desc-juego-card';
+    descripcion.textContent = juego.descripcion || '';
+    superior.append(titulo, descripcion);
+    const boton = document.createElement('button');
+    boton.className = 'btn ' + claseBtn;
+    boton.textContent = 'Al Carrito';
+    boton.addEventListener('click', () => anadirAlCarrito(juego.id));
+    overlay.append(superior, boton);
+    card.appendChild(overlay);
+    return card;
 }
 
 function anadirAlCarrito(idJuego) {
-    fetch('api/biblioteca', {
+    GenesisApi.request('api/biblioteca', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({id_juego: idJuego})
@@ -120,5 +116,5 @@ function anadirAlCarrito(idJuego) {
         .then(datos => {
             alert(datos.mensaje);
         })
-        .catch(e => console.error(e));
+        .catch(e => alert(e.message));
 }

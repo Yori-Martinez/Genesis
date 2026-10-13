@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function cargarMisPublicaciones() {
-    fetch('api/mispublicaciones')
+    GenesisApi.request('api/mispublicaciones')
         .then(respuesta => {
             if (!respuesta.ok) {
                 throw new Error('Error en la peticion');

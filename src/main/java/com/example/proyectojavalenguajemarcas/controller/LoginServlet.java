@@ -1,57 +1,38 @@
 package com.example.proyectojavalenguajemarcas.controller;
 
-import com.example.proyectojavalenguajemarcas.model.Usuario;
 import com.example.proyectojavalenguajemarcas.model.UsuarioDAO;
-import com.google.gson.Gson;
+import com.example.proyectojavalenguajemarcas.security.*;
 import com.google.gson.JsonObject;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
-import java.io.BufferedReader;
+import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/api/login")
 public class LoginServlet extends HttpServlet {
-
-    private UsuarioDAO usuarioDAO = new UsuarioDAO();
-    private Gson gson = new Gson();
-
+    private final UsuarioDAO dao = new UsuarioDAO();
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-
-
-        BufferedReader reader = req.getReader();
-        JsonObject jsonRecibido = gson.fromJson(reader, JsonObject.class);
-
-        String username = jsonRecibido.get("username").getAsString();
-        String password = jsonRecibido.get("password").getAsString();
-
-
-        Usuario usuarioValido = usuarioDAO.validarLogin(username, password);
-
-        JsonObject jsonRespuesta = new JsonObject();
-
-        if (usuarioValido != null) {
-
-
-            HttpSession session = req.getSession(true);
-            session.setAttribute("usuarioLogueado", usuarioValido);
-
-            jsonRespuesta.addProperty("exito", true);
-            jsonRespuesta.addProperty("rol", usuarioValido.getRol());
-            jsonRespuesta.addProperty("nombre", usuarioValido.getUsername());
-        } else {
-            jsonRespuesta.addProperty("exito", false);
-            jsonRespuesta.addProperty("mensaje", "Usuario o contraseña incorrectos");
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            JsonObject input = HttpJson.read(req);
+            String username = HttpJson.string(input, "username", 50).trim();
+            String password = HttpJson.string(input, "password", 512);
+            if (username.isEmpty()) throw new IllegalArgumentException();
+            UsuarioDAO.Account account = dao.validarLogin(username, password);
+            if (account == null) {
+                HttpJson.error(resp, 401, "Usuario o contraseña incorrectos");
+                return;
+            }
+            Sessions.login(req, account);
+            JsonObject body = new JsonObject();
+            body.addProperty("exito", true);
+            body.addProperty("nombre", account.user().getUsername());
+            body.addProperty("rol", account.user().getRol());
+            HttpJson.write(resp, 200, body);
+        } catch (IllegalArgumentException e) {
+            HttpJson.error(resp, 400, "Datos de acceso no válidos.");
+        } catch (SQLException e) {
+            HttpJson.error(resp, 503, "Servicio temporalmente no disponible.");
         }
-
-
-        resp.getWriter().write(gson.toJson(jsonRespuesta));
     }
 }

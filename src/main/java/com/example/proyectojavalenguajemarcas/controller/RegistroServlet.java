@@ -1,49 +1,37 @@
 package com.example.proyectojavalenguajemarcas.controller;
 
 import com.example.proyectojavalenguajemarcas.model.UsuarioDAO;
-import com.google.gson.Gson;
+import com.example.proyectojavalenguajemarcas.security.*;
 import com.google.gson.JsonObject;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.BufferedReader;
+import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Map;
 
 @WebServlet("/api/registro")
 public class RegistroServlet extends HttpServlet {
-    private UsuarioDAO usuarioDAO = new UsuarioDAO();
-    private Gson gson = new Gson();
-
+    private final UsuarioDAO dao = new UsuarioDAO();
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-        JsonObject jsonRespuesta = new JsonObject();
-
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            BufferedReader reader = req.getReader();
-            JsonObject jsonRecibido = gson.fromJson(reader, JsonObject.class);
-
-            String username = jsonRecibido.get("username").getAsString();
-            String email = jsonRecibido.get("email").getAsString();
-            String password = jsonRecibido.get("password").getAsString();
-
-            boolean registrado = usuarioDAO.registrarUsuario(username, email, password);
-
-            if (registrado) {
-                jsonRespuesta.addProperty("exito", true);
-                jsonRespuesta.addProperty("mensaje", "Cuenta creada. Ya puedes iniciar sesión.");
-            } else {
-                jsonRespuesta.addProperty("exito", false);
-                jsonRespuesta.addProperty("mensaje", "El usuario o email ya existe.");
+            JsonObject input = HttpJson.read(req);
+            String username = HttpJson.string(input, "username", 50).trim();
+            String email = HttpJson.string(input, "email", 100).trim();
+            String password = HttpJson.string(input, "password", 512);
+            if (username.isBlank() || username.chars().anyMatch(Character::isISOControl)
+                    || !email.matches("[^\\s@]+@[^\\s@]+\\.[^\\s@]+") || !Passwords.validNewPassword(password)) {
+                throw new IllegalArgumentException();
             }
-        } catch (Exception e) {
-            jsonRespuesta.addProperty("exito", false);
-            jsonRespuesta.addProperty("mensaje", "Error procesando el registro.");
+            if (dao.registrarUsuario(username, email, password) == UsuarioDAO.Registration.DUPLICATE) {
+                HttpJson.error(resp, 409, "El usuario o email ya existe.");
+                return;
+            }
+            HttpJson.write(resp, 201, Map.of("exito", true, "mensaje", "Cuenta creada. Ya puedes iniciar sesión."));
+        } catch (IllegalArgumentException e) {
+            HttpJson.error(resp, 400, "Datos no válidos. La contraseña debe tener entre 15 y 128 caracteres.");
+        } catch (SQLException e) {
+            HttpJson.error(resp, 503, "Servicio temporalmente no disponible.");
         }
-        resp.getWriter().write(gson.toJson(jsonRespuesta));
     }
 }

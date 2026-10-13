@@ -136,7 +136,7 @@ public class JuegoDAO {
     }
 
     public boolean agregarABiblioteca(int idUsuario, int idJuego) {
-        String sql = "INSERT IGNORE INTO biblioteca (id_usuario, id_juego) VALUES (?, ?)";
+        String sql = "INSERT IGNORE INTO biblioteca (id_usuario, id_juego) SELECT ?, id FROM juegos WHERE id = ? AND estado = 'PUBLICADO'";
         try (Connection con = ConexionBD.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, idUsuario);

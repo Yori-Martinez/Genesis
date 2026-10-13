@@ -3,6 +3,7 @@ package com.example.proyectojavalenguajemarcas.controller;
 import com.example.proyectojavalenguajemarcas.model.ConexionBD;
 import com.example.proyectojavalenguajemarcas.model.Usuario;
 import com.google.gson.Gson;
+import com.example.proyectojavalenguajemarcas.security.*;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -21,7 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 
-@MultipartConfig(maxFileSize = 1024 * 1024 * 5)
+@MultipartConfig(maxFileSize = 3 * 1024 * 1024, maxRequestSize = 4 * 1024 * 1024)
 @WebServlet("/api/avatar")
 public class AvatarServlet extends HttpServlet {
 
@@ -56,6 +57,9 @@ public class AvatarServlet extends HttpServlet {
                     }
                 }
             }
+        } catch (IllegalStateException e) {
+            HttpJson.error(resp, 413, "El archivo supera el límite de 3 MiB o la petición supera 4 MiB.");
+            return;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,6 +103,9 @@ public class AvatarServlet extends HttpServlet {
                 jsonRespuesta.addProperty("exito", false);
                 jsonRespuesta.addProperty("mensaje", "Archivo no válido o vacío.");
             }
+        } catch (IllegalStateException e) {
+            HttpJson.error(resp, 413, "El archivo supera el límite de 3 MiB o la petición supera 4 MiB.");
+            return;
         } catch (Exception e) {
             e.printStackTrace();
             jsonRespuesta.addProperty("exito", false);

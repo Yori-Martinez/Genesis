@@ -4,6 +4,7 @@ import com.example.proyectojavalenguajemarcas.model.Juego;
 import com.example.proyectojavalenguajemarcas.model.JuegoDAO;
 import com.example.proyectojavalenguajemarcas.model.Usuario;
 import com.google.gson.Gson;
+import com.example.proyectojavalenguajemarcas.security.*;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -18,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-@MultipartConfig
+@MultipartConfig(maxFileSize = 3 * 1024 * 1024, maxRequestSize = 4 * 1024 * 1024)
 @WebServlet("/api/revision")
 public class RevisionServlet extends HttpServlet {
 
@@ -44,7 +45,10 @@ public class RevisionServlet extends HttpServlet {
 
         String idParam = req.getParameter("id");
         if (idParam != null) {
-            Juego juego = juegoDAO.obtenerJuegoPorId(Integer.parseInt(idParam));
+            int id;
+            try { id = HttpJson.positiveId(idParam); }
+            catch (IllegalArgumentException e) { HttpJson.error(resp, 400, "Identificador no válido."); return; }
+            Juego juego = juegoDAO.obtenerJuegoPorId(id);
             resp.getWriter().write(gson.toJson(juego));
         } else {
             List<Juego> pendientes = juegoDAO.obtenerJuegosPendientes();
@@ -65,8 +69,14 @@ public class RevisionServlet extends HttpServlet {
             return;
         }
 
+        Usuario user = (Usuario) req.getAttribute("authenticatedUser");
+        if (user == null || !"ADMIN".equals(user.getRol())) {
+            HttpJson.error(resp, user == null ? 401 : 403, "Permisos insuficientes.");
+            return;
+        }
+
         try {
-            int idJuego = Integer.parseInt(req.getParameter("id"));
+            int idJuego = HttpJson.positiveId(req.getParameter("id"));
             String estado = req.getParameter("estado");
 
             if ("RECHAZADO".equals(estado)) {
@@ -87,7 +97,16 @@ public class RevisionServlet extends HttpServlet {
                     jsonRespuesta.addProperty("exito", false);
                     jsonRespuesta.addProperty("mensaje", "Falta imagen de carátula.");
                 }
+            } else {
+                HttpJson.error(resp, 400, "Estado no válido.");
+                return;
             }
+        } catch (IllegalStateException e) {
+            HttpJson.error(resp, 413, "El archivo supera el límite de 3 MiB o la petición supera 4 MiB.");
+            return;
+        } catch (IllegalArgumentException e) {
+            HttpJson.error(resp, 400, "Datos no válidos.");
+            return;
         } catch (Exception e) {
             e.printStackTrace();
             jsonRespuesta.addProperty("exito", false);

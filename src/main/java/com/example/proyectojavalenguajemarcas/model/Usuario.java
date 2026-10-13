@@ -1,6 +1,7 @@
 package com.example.proyectojavalenguajemarcas.model;
 
-public class Usuario {
+public class Usuario implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
     private int id;
     private String username;
     private String email;

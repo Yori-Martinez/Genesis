@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function cargarJuegosPendientes() {
 
-    fetch('api/revision')
+    GenesisApi.request('api/revision')
         .then(respuesta => {
 
             if (!respuesta.ok) {

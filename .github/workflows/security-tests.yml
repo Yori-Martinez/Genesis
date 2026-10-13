@@ -1,0 +1,65 @@
+name: Security tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: genesis-ci-only-password
+          MYSQL_DATABASE: genesis_auth_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+    env:
+      APP_ENV: development
+      MYSQLHOST: 127.0.0.1
+      MYSQLPORT: "3306"
+      MYSQLDATABASE: genesis_auth_test
+      MYSQLUSER: root
+      MYSQLPASSWORD: genesis-ci-only-password
+      MYSQL_SSL_MODE: DISABLED
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - name: JUnit, migration and real HTTP integration
+        run: bash ./mvnw -B -Pintegration verify
+      - name: Build Vercel container
+        run: docker build -f Dockerfile.vercel -t genesis-vercel-test .
+      - name: Production session cookie
+        env:
+          APP_ENV: development
+          SESSION_COOKIE_SECURE: "true"
+        run: bash ./mvnw -B -Pintegration -Dit.test=ProductionCookieIT verify
+      - name: JavaScript security regression tests
+        run: node --test tests/ui.test.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-test-reports
+          path: |
+            target/surefire-reports/
+            target/failsafe-reports/

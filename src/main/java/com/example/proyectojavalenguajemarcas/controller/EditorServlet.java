@@ -3,6 +3,7 @@ package com.example.proyectojavalenguajemarcas.controller;
 import com.example.proyectojavalenguajemarcas.model.JuegoDAO;
 import com.example.proyectojavalenguajemarcas.model.Usuario;
 import com.google.gson.Gson;
+import com.example.proyectojavalenguajemarcas.security.*;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -17,7 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-@MultipartConfig
+@MultipartConfig(maxFileSize = 3 * 1024 * 1024, maxRequestSize = 4 * 1024 * 1024)
 @WebServlet("/api/editor")
 public class EditorServlet extends HttpServlet {
 
@@ -79,6 +80,9 @@ public class EditorServlet extends HttpServlet {
                 jsonRespuesta.addProperty("mensaje", "Error al guardar los binarios en la base de datos.");
             }
 
+        } catch (IllegalStateException e) {
+            HttpJson.error(resp, 413, "El archivo supera el límite de 3 MiB o la petición supera 4 MiB.");
+            return;
         } catch (Exception e) {
             e.printStackTrace();
             jsonRespuesta.addProperty("exito", false);

@@ -1,2 +1,3 @@
-Enlace del wireframe en Figma:https://www.figma.com/design/sgw4ZZBnYOz7vAE41yJeMO/Wireframe_Genesis?node-id=0-1&t=zMQvEdi1VE2Y5lVO-1
-Enlace de la pagina en Railway:https://genesis-production-b8cf.up.railway.app/index.html
+Genesis: tienda de videojuegos con Java, MySQL y autenticación segura. Preparada para Vercel.
+
+Consulta README.md para configurar el alojamiento y SEGURIDAD.md para migrar cuentas existentes.

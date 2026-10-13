@@ -1,6 +1,8 @@
 package com.example.proyectojavalenguajemarcas.controller;
 
 import com.example.proyectojavalenguajemarcas.model.ConexionBD;
+import com.example.proyectojavalenguajemarcas.model.Usuario;
+import com.example.proyectojavalenguajemarcas.security.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,11 +19,18 @@ import java.sql.ResultSet;
 public class CaratulaServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
+        int id;
+        try { id = HttpJson.positiveId(req.getParameter("id")); }
+        catch (IllegalArgumentException e) { HttpJson.error(resp, 400, "Identificador no válido."); return; }
         String sql = "SELECT caratula_contenido FROM juegos WHERE id = ?";
 
         try (Connection con = ConexionBD.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
+            Usuario user = (Usuario) req.getAttribute("authenticatedUser");
+            if (!GameAccess.canViewCover(con, user, id)) {
+                HttpJson.error(resp, 403, "No tienes permiso para acceder a este archivo.");
+                return;
+            }
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
